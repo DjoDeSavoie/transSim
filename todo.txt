@@ -1,1 +1,3 @@
 Implémenter le remplissage de la base (client, commercant, cartes)
+Implémentation de la définition des codes pin, cryptogrammes et clé de luhn
+Implémentation du serveur ntp (network time protocol) : fichier -> fonction qui permet de définir l'heure global de notre application
