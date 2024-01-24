@@ -1,3 +1,9 @@
 Implémenter le remplissage de la base (client, commercant, cartes)
+    Création des comptes bancaires émetteurs (en fonction de la banque choisie)
+    Création des comptes bancaires acquéreurs (en fonction de la banque choisie)
 Implémentation de la définition des codes pin, cryptogrammes et clé de luhn
 Implémentation du serveur ntp (network time protocol) : fichier -> fonction qui permet de définir l'heure global de notre application
+
+    Test logs/ntp ok : on regarde ce qu'il se passe lorsque l'heure affichée est cohérente avec tout le fonctionnement de l'application
+    Test logs/ntp ko : on regarde ce qu'il se passe lorsque l'heure affichée n'est pas cohérente avec tout le fonctionnement de l'application
+
