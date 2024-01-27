@@ -3,7 +3,7 @@
 import pymysql
 
 #Connexion à la base de données
-conn = pymysql.connect(user ='root', password='', host='localhost', database='transsimclient')
+conn = pymysql.connect(user ='i22024395', password='Kr6zFGkMQpvFH07', host='aris-issad-etu.pedaweb.univ-amu.fr', database='i22024395')
 cursor = conn.cursor()
 
 # Fonction pour récupérer la liste des noms de banques depuis la base de données

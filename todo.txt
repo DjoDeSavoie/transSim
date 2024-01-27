@@ -1,3 +1,5 @@
+###########  Partie BDD
+
 Implémenter le remplissage de la base (client, commercant, cartes)  
     Création des comptes bancaires émetteurs (en fonction de la banque choisie)
     Création des comptes bancaires acquéreurs (en fonction de la banque choisie)
@@ -8,6 +10,10 @@ Implémentation du serveur ntp (network time protocol) : fichier -> fonction qui
     Test logs/ntp ko : on regarde ce qu'il se passe lorsque l'heure affichée n'est pas cohérente avec tout le fonctionnement de l'application
 
 
+
+
+
+###########  Partie python :
 
 *fcts tpe 
     -> recup infos cb puis verif (numero valide ...)

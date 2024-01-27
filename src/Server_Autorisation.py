@@ -1,0 +1,1 @@
+#Fichier contenant les fonctions du serveur d'autoisation
