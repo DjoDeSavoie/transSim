@@ -1,4 +1,4 @@
-Implémenter le remplissage de la base (client, commercant, cartes)
+Implémenter le remplissage de la base (client, commercant, cartes)  
     Création des comptes bancaires émetteurs (en fonction de la banque choisie)
     Création des comptes bancaires acquéreurs (en fonction de la banque choisie)
 Implémentation de la définition des codes pin, cryptogrammes et clé de luhn
@@ -7,3 +7,28 @@ Implémentation du serveur ntp (network time protocol) : fichier -> fonction qui
     Test logs/ntp ok : on regarde ce qu'il se passe lorsque l'heure affichée est cohérente avec tout le fonctionnement de l'application
     Test logs/ntp ko : on regarde ce qu'il se passe lorsque l'heure affichée n'est pas cohérente avec tout le fonctionnement de l'application
 
+
+
+*fcts tpe 
+    -> recup infos cb puis verif (numero valide ...)
+    -> envoi demande autor au serv acqui 
+    -> ajout infos sur la transaction a sa fin 
+
+*mettre en place fichiers (ou autre si solution plus facile/ pratique en python) pour serveurs acquisitions; 
+    ->puis mettre fct qui parse constamment ces fichiers pour detecter si il y'a ou pas de nouveaux logs
+    ->mettre fct qui ajoute des eltms a ces fichiers par exemple lors d'uene demande d'autor du tpe, ajouter ligne en haut dans le fichier serv acqui
+
+*fcts serv acqui
+    ->verif si dans meme banque 
+        -> si oui, fct envoi requete a serv autor (ajout ligne dans fichier serv autor)
+        -> si non, fct envoi requete a res interb (ajout ligne dans fichier res interb)
+        -envoi num autor tpe
+
+*fct res interbancaire
+    -> routage(ajout de ligne dans fichier serv acqui de la banque cible)
+
+*fcts serv autor
+    ->verifs carte (opposition...)
+    ->verifs cb(solde...)
+    ->genere autor et ajout autor dans fichier autor sinon log dans fichier log ; retourne booleen si reussit ou pas
+    ->envoi num autor serv acqui/erreur
