@@ -78,7 +78,7 @@ DROP TABLE IF EXISTS `comptebancaireacquereur`;
 CREATE TABLE IF NOT EXISTS `comptebancaireacquereur` (
   `idCompteAcquereur` int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'numéro d''identifiant du compte bancaire de l''acquéreur (commercant)',
   `idBanqueAcquereur` int UNSIGNED NOT NULL,
-  `numeroCompte` int UNSIGNED NOT NULL,
+  `numeroCompte` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `nom` varchar(128) NOT NULL,
   `prenom` varchar(128) NOT NULL,
   `soldeCompteAcquereur` int NOT NULL,
