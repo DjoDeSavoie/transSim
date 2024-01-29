@@ -58,7 +58,7 @@ def creationIdCompteBancaire():
     idCompte = random11number()
     
     #on vérifie que l'id n'existe pas déjà 
-    cursor.execute("SELECT idCompteEmetteur FROM comptebancaireEmetteur WHERE idCompteEmetteur = %s", (idCompte))
+    cursor.execute("SELECT idCompteEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s", (idCompte))
     idCompteExiste = cursor.fetchone()
     
     #si l'id existe déjà ou qu'il est de longuer différente de 11, on en génère un nouveau

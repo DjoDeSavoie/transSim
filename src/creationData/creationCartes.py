@@ -1,8 +1,8 @@
 import pymysql
 import random
 
-#on importe le serveru ntp pour utilmiser sa fonction de récupération de la date + 2 ans
-import Server_NTP
+#on importe le serveur ntp pour utiliser sa fonction de récupération de la date + 2 ans
+from Server_NTP import getDateWithTwoYears
 
 conn = pymysql.connect(user ='root', host='34.163.159.223', database='transsim')
 cursor = conn.cursor()
@@ -11,7 +11,7 @@ cursor = conn.cursor()
 tabNumCarte = {"creditMutuel" : 132, "banquePostale" : 970, "lcl" : 972, "societeGenerale" : 973, "bnp" : 974, "caisseEpargne" : 978, "creditAgricole":131}
 
 
-#création des cartes bancaires associées aux comptes acquéreurs
+#création des cartes bancaires associées aux comptes acquéreurs, dès lors qu'un compte acquéreur est créé
 #on crée une carte par acquéreur
 
 
@@ -57,7 +57,7 @@ def cleDeLuhn(numero1, numero234, numero5a15):
     numero = str(numero1) + str(numero234) + str(numero5a15)
     #on calcule la clé de luhn
     somme = 0
-    for i in range(16):
+    for i in range(15):
         if i%2 == 0:
             somme += int(numero[i])
         else:
@@ -69,6 +69,8 @@ def cleDeLuhn(numero1, numero234, numero5a15):
     return cle #la 16ème valeur du numéro de carte    
     
 
+
+
 def creationCarte(idCompteEmetteur, idBanque):
     numero1 = choixReseauEmetteurCarte()
     numero234 = genereNumeroCarteEnFonctionBanque(idBanque)
@@ -77,18 +79,22 @@ def creationCarte(idCompteEmetteur, idBanque):
     
     #on concatène les valeurs
     numeroCarte = str(numero1) + str(numero234) + str(numero5a15) + str(numero16)    
-    genererCodePin()
-    genererCryptogramme()
+    
+    dateValidite = getDateWithTwoYears()
+    pin = genererCodePin()
+    crypto = genererCryptogramme()
+    
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n\n")
     
     
     #on fait la requete sql permettant d'insérer les valeurs dans la base de données
-    cursor.execute("INSERT INTO cartebancaire(numeroCarte, idCompteEmetteur, dateExpiration, validite, pin, cryptogramme) VALUES (%s, %s, %s, %s, %s, %s)",
-                   (numeroCarte, idCompteEmetteur, getDateWithTwoYears(), 1, genererCodePin(), genererCryptogramme()))
+    cursor.execute("INSERT INTO cartebancaire (numeroCarte, idCompteEmetteur, dateExpiration, validite, pin, cryptogramme) VALUES (%s, %s, %s, %s, %s, %s)",
+                   (numeroCarte, idCompteEmetteur, dateValidite, 1, pin, crypto))
+    
+    conn.commit()
+    conn.close()
     
 
 
-
-
-
-
-#savoir si : on crée une carte par acquéreur ou plusieurs, si on le fait automatiquement après la création du compte en banque ou si on le fait manuellement
+#teste de la fonction de création de carte avec un id de compte et un id de banque
+#creationCarte("12345678910", "1")
