@@ -91,7 +91,6 @@ DROP TABLE IF EXISTS `comptebancaireacquereur`;
 CREATE TABLE IF NOT EXISTS `comptebancaireacquereur` (
   `idCompteAcquereur` int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'numéro d''identifiant du compte bancaire de l''acquéreur (commercant)',
   `idBanqueAcquereur` int UNSIGNED NOT NULL,
-  `numeroCompte` int UNSIGNED NOT NULL,
   `nom` varchar(128) NOT NULL,
   `prenom` varchar(128) NOT NULL,
   `soldeCompteAcquereur` int DEFAULT '0',
@@ -99,14 +98,6 @@ CREATE TABLE IF NOT EXISTS `comptebancaireacquereur` (
   KEY `fk_banque_comptebancaireacquereur` (`idBanqueAcquereur`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `comptebancaireacquereur`
---
-
-INSERT INTO `comptebancaireacquereur` (`idCompteAcquereur`, `idBanqueAcquereur`, `numeroCompte`, `nom`, `prenom`, `soldeCompteAcquereur`) VALUES
-(4, 1, 0, 'Degrange', 'Jonathan', 0),
-(5, 7, 0, 'Issad', 'Aris', 0),
-(6, 4, 0, 'Bop', 'Falilou', 0);
 
 -- --------------------------------------------------------
 
@@ -118,7 +109,6 @@ DROP TABLE IF EXISTS `comptebancaireemetteur`;
 CREATE TABLE IF NOT EXISTS `comptebancaireemetteur` (
   `idCompteEmetteur` int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'numéro d''identifiant du compte bancaire de l''émetteur (client)',
   `idBanqueEmetteur` int UNSIGNED NOT NULL,
-  `numeroCompte` int UNSIGNED NOT NULL,
   `nom` varchar(128) NOT NULL,
   `prenom` varchar(128) NOT NULL,
   `soldeCompteEmetteur` int NOT NULL,

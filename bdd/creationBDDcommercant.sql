@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mar. 23 jan. 2024 à 16:29
+-- Généré le : lun. 29 jan. 2024 à 08:15
 -- Version du serveur : 8.0.31
 -- Version de PHP : 8.0.26
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `transsimcommercant`
+-- Base de données : `transsimclient`
 --
 
 -- --------------------------------------------------------
@@ -48,7 +48,20 @@ CREATE TABLE IF NOT EXISTS `banque` (
   `idBanque` int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'identifiant de la banque, clé primaire',
   `nomBanque` varchar(128) DEFAULT NULL COMMENT 'nom de la banque',
   PRIMARY KEY (`idBanque`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1164 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `banque`
+--
+
+INSERT INTO `banque` (`idBanque`, `nomBanque`) VALUES
+(1, 'creditMutuel'),
+(2, 'banquePostale'),
+(3, 'lcl'),
+(4, 'societeGenerale'),
+(5, 'bnp'),
+(6, 'caisseEpargne'),
+(7, 'creditAgricole');
 
 -- --------------------------------------------------------
 
@@ -80,10 +93,11 @@ CREATE TABLE IF NOT EXISTS `comptebancaireacquereur` (
   `idBanqueAcquereur` int UNSIGNED NOT NULL,
   `nom` varchar(128) NOT NULL,
   `prenom` varchar(128) NOT NULL,
-  `soldeCompteAcquereur` int NOT NULL,
+  `soldeCompteAcquereur` int DEFAULT '0',
   PRIMARY KEY (`idCompteAcquereur`),
   KEY `fk_banque_comptebancaireacquereur` (`idBanqueAcquereur`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 -- --------------------------------------------------------
 
@@ -158,3 +172,4 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+ 

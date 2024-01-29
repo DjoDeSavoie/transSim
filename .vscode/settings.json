@@ -1,0 +1,34 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "34.163.159.223",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "transSimClientConnection",
+            "group": "transSim",
+            "username": "root",
+            "database": "transsimclient",
+            "password": ""
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "34.163.159.223",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "transSimCommercantConnection",
+            "group": "transSim",
+            "database": "transsimcommercant",
+            "username": "root",
+            "password": ""
+        }
+    ]
+}

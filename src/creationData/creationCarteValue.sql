@@ -1,0 +1,4 @@
+
+delete * FROM cartebancaire
+
+

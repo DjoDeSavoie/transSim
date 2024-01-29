@@ -1,6 +1,6 @@
 import pymysql
 
-conn = pymysql.connect(user ='root', host='34.163.159.223', database='bdd_porteur')
+conn = pymysql.connect(user ='root', host='34.163.159.223', database='transsimclient')
 cursor = conn.cursor()
 
 

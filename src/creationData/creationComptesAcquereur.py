@@ -3,7 +3,7 @@
 import pymysql
 
 #Connexion à la base de données
-conn = pymysql.connect(user ='root', host='34.163.159.223', database='bdd_porteur')
+conn = pymysql.connect(user ='root', host='34.163.159.223', database='transsimclient')
 cursor = conn.cursor()
 
 # Fonction pour récupérer la liste des noms de banques depuis la base de données
@@ -57,7 +57,7 @@ def creerCompte():
     
     
     # Exécutez la requête SQL pour créer un compte
-    cursor.execute("INSERT INTO comptebancaireacquereur (nom, prenom, idBanqueAcquereur) VALUES (%s, %s, %s)", (nom, prenom, idBanque))
+    cursor.execute("INSERT INTO comptebancaireemetteur (nom, prenom, idBanqueEmetteur) VALUES (%s, %s, %s)", (nom, prenom, idBanque))
     conn.commit()
     conn.close()
     print("Compte créé avec succès.")
