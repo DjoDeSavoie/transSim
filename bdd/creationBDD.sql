@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `transsimclient`
+-- Base de données : `transsim`
 --
 
 -- --------------------------------------------------------
@@ -48,20 +48,20 @@ CREATE TABLE IF NOT EXISTS `banque` (
   `idBanque` int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'identifiant de la banque, clé primaire',
   `nomBanque` varchar(128) DEFAULT NULL COMMENT 'nom de la banque',
   PRIMARY KEY (`idBanque`)
-) ENGINE=InnoDB AUTO_INCREMENT=1164 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `banque`
 --
 
-INSERT INTO `banque` (`idBanque`, `nomBanque`) VALUES
-(1, 'creditMutuel'),
-(2, 'banquePostale'),
-(3, 'lcl'),
-(4, 'societeGenerale'),
-(5, 'bnp'),
-(6, 'caisseEpargne'),
-(7, 'creditAgricole');
+INSERT INTO `banque` (`nomBanque`) VALUES
+('creditMutuel'),
+('banquePostale'),
+('lcl'),
+('societeGenerale'),
+('bnp'),
+('caisseEpargne'),
+('creditAgricole');
 
 -- --------------------------------------------------------
 
@@ -71,10 +71,10 @@ INSERT INTO `banque` (`idBanque`, `nomBanque`) VALUES
 
 DROP TABLE IF EXISTS `cartebancaire`;
 CREATE TABLE IF NOT EXISTS `cartebancaire` (
-  `numeroCarte` int NOT NULL COMMENT 'numéro de carte, les 4 premier chiffres identifient la banque, le dernier est la clé de luhn calculée d''après les chiffres précédents',
-  `idCompteEmetteur` int UNSIGNED NOT NULL,
+  `numeroCarte` BIGINT NOT NULL COMMENT 'numéro de carte, les 4 premier chiffres identifient la banque, le dernier est la clé de luhn calculée d''après les chiffres précédents',
+  `idCompteEmetteur` BIGINT UNSIGNED NOT NULL,
   `dateExpiration` date NOT NULL,
-  `validite` tinyint(1) NOT NULL,
+  `validite` boolean NOT NULL,
   `pin` int NOT NULL,
   `cryptogramme` int NOT NULL,
   PRIMARY KEY (`numeroCarte`),
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `cartebancaire` (
 
 DROP TABLE IF EXISTS `comptebancaireacquereur`;
 CREATE TABLE IF NOT EXISTS `comptebancaireacquereur` (
-  `idCompteAcquereur` int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'numéro d''identifiant du compte bancaire de l''acquéreur (commercant)',
+  `idCompteAcquereur` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'numéro d''identifiant du compte bancaire de l''acquéreur (commercant)',
   `idBanqueAcquereur` int UNSIGNED NOT NULL,
   `nom` varchar(128) NOT NULL,
   `prenom` varchar(128) NOT NULL,
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `comptebancaireacquereur` (
 
 DROP TABLE IF EXISTS `comptebancaireemetteur`;
 CREATE TABLE IF NOT EXISTS `comptebancaireemetteur` (
-  `idCompteEmetteur` int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'numéro d''identifiant du compte bancaire de l''émetteur (client)',
+  `idCompteEmetteur` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'numéro d''identifiant du compte bancaire de l''émetteur (client)',
   `idBanqueEmetteur` int UNSIGNED NOT NULL,
   `nom` varchar(128) NOT NULL,
   `prenom` varchar(128) NOT NULL,

@@ -1,9 +1,13 @@
 #Fichier permettant la création des comptes acquéreurs
 
 import pymysql
+import random
+
+#on importe la focntion de création de carte
+import creationCartes
 
 #Connexion à la base de données
-conn = pymysql.connect(user ='root', host='34.163.159.223', database='transsimclient')
+conn = pymysql.connect(user ='root', host='34.163.159.223', database='transsim')
 cursor = conn.cursor()
 
 # Fonction pour récupérer la liste des noms de banques depuis la base de données
@@ -43,6 +47,33 @@ def recupererIdBanqueChoisie(choixBanque):
 
     return idBanque
 
+def random11number():
+    num = ""
+    for i in range(11):
+        num += str(random.randint(0,9))
+    return num
+
+def creationIdCompteBancaire():
+    #choisit 11 chiffre aléatoire
+    idCompte = random11number()
+    
+    #on vérifie que l'id n'existe pas déjà 
+    cursor.execute("SELECT idCompteEmetteur FROM comptebancaireEmetteur WHERE idCompteEmetteur = %s", (idCompte))
+    idCompteExiste = cursor.fetchone()
+    
+    #si l'id existe déjà ou qu'il est de longuer différente de 11, on en génère un nouveau
+
+    while idCompteExiste != None or len(idCompte) != 11:
+        idCompte = random11number()
+        cursor.execute("SELECT idCompteEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s", (idCompte))
+        idCompteExiste = cursor.fetchone()
+        
+    return idCompte
+
+numCompte = creationIdCompteBancaire()
+#affichage du numéro de compte
+print("Le numéro de compte est : ", numCompte)
+
 
 
 # Fonction pour créer un compte en banque
@@ -54,15 +85,18 @@ def creerCompte():
     nomsBanques = recupererNomsBanques()
     choixBanque = choisirBanque(nomsBanques)
     idBanque = recupererIdBanqueChoisie(choixBanque)
+    idCompteEmetteur = creationIdCompteBancaire()
     
     
     # Exécutez la requête SQL pour créer un compte
-    cursor.execute("INSERT INTO comptebancaireemetteur (nom, prenom, idBanqueEmetteur) VALUES (%s, %s, %s)", (nom, prenom, idBanque))
+    cursor.execute("INSERT INTO comptebancaireemetteur (idCompteEmetteur, idBanqueEmetteur, nom, prenom) VALUES (%s, %s, %s, %s)", (idCompteEmetteur, idBanque, nom, prenom))
     conn.commit()
     conn.close()
-    print("Compte créé avec succès.")
+    print("Compte créé avec succès! ... \n Création de la carte associée au compte ... \n")
+    
+    creationCartes.creationCarte(idCompteEmetteur, idBanque)
     
 
 
-#creation d'un compte acquéreur
+# creation d'un compte acquéreur
 creerCompte()
