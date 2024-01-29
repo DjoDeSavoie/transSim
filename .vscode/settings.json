@@ -9,9 +9,10 @@
             "server": "34.163.159.223",
             "port": 3306,
             "driver": "MySQL",
-            "name": "transSim",
-            "database": "transsim",
+            "name": "transSimConnection",
+            "group": "transSim",
             "username": "root",
+            "database": "transsim",
             "password": ""
         }
     ]
