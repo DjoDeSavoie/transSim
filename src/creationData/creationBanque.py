@@ -44,52 +44,6 @@ creer_banque(nomBanque)
 
 
 # Ouvrir un fichier en mode écriture (crée un fichier s'il n'existe pas)
-with open("logs/fichierLogsTPE" + str(nomBanque.capitalize()) + ".json", "w") as fichier:
+with open("logs/logsTPE/fichierLogsTPE" + str(nomBanque.capitalize()) + ".json", "w") as fichier:
     # Écrire dans le fichier
     fichier.write("Fichier de logs de la banque " + str(nomBanque.capitalize()) + ".\n\n")
-
-# Chaque banque possède un fichier de logs qui, lorsqu'une transaction est effectuée, enregistre les informations suivantes :
-# - numéro de compte de l'émetteur
-# - numéro de compte de l'acquéreur
-# - montant de la transaction
-# - date et heure de la transaction
-
-
-# def createFileLog(idComteEmetteur, idCompteAcquereur, montant):
-#     # Obtenir la date et l'heure actuelles
-#     dateHeureTransaction = getDateWithTwoYears()
-
-#     # Créer un dictionnaire avec les informations
-#     nouvelleLigne = {
-#         "numero_compte_emetteur": idComteEmetteur,
-#         "numero_compte_acquereur": idCompteAcquereur,
-#         "montant_transaction": montant,
-#         "date_heure_transaction": dateHeureTransaction
-#     }
-
-#     cheminFichier = "transactions.json"
-
-#     # Si le fichier existe, charger son contenu
-#     if os.path.exists(cheminFichier):
-#         with open(cheminFichier, "r") as fichier:
-#             donneesExistantes = json.load(fichier)
-#     else:
-#         donneesExistantes = []
-
-#     # Ajouter la nouvelle ligne
-#     donneesExistantes.append(nouvelleLigne)
-
-#     # Sauvegarder le fichier avec la nouvelle ligne
-#     with open(cheminFichier, "w") as fichier:
-#         json.dump(donneesExistantes, fichier, indent=2)
-
-# # Exemple d'utilisation
-# creer_ou_ajouter_ligne_fichier_json("123456789", "987654321", 100.50)
-
-
-
-
-# # Ouvrir un fichier en mode écriture (crée un fichier s'il n'existe pas)
-# with open("mon_fichier.txt", "w") as fichier:
-#     # Écrire dans le fichier
-#     fichier.write("Contenu du fichier.\nLigne suivante.")
