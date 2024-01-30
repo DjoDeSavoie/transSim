@@ -1,16 +1,16 @@
 [
     {
-      "numero_compte_emetteur": "4132438296994163",
-      "numero_compte_acquereur": 1,
-      "montant_transaction": 300,
-      "date_heure_transaction": "30/01/2024 21:36:59",
-      "isTraite": false
+        "numero_compte_emetteur": "4132438296994163",
+        "numero_compte_acquereur": 1,
+        "montant_transaction": 300,
+        "date_heure_transaction": "30/01/2024 21:36:59",
+        "isTraite": true
     },
     {
-      "numero_compte_emetteur": "4132438296994163",
-      "numero_compte_acquereur": 1,
-      "montant_transaction": 300,
-      "date_heure_transaction": "30/01/2024 21:45:11",
-      "isTraite": false
+        "numero_compte_emetteur": "4132438296994163",
+        "numero_compte_acquereur": 1,
+        "montant_transaction": 300,
+        "date_heure_transaction": "30/01/2024 21:45:11",
+        "isTraite": 0
     }
-  ]
+]

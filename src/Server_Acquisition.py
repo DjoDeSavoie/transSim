@@ -9,7 +9,23 @@ import json
 
 
 #Fonction de lecture du fichier json de la banque correspondante
-def lireFichierJson(nomBanque):
-    with open("logs/logsTPE/fichierLogsTPE" + str(nomBanque.capitalize()) + ".json", 'r') as fichier:
+def lireFichierJson():
+    with open("logs/logsTPE/logsTPE.json", 'r') as fichier:
         donnees = json.load(fichier)
     return donnees
+
+#effectue une lecture en boucle pour accéder à la dernier transaction en attente
+def lireTransactionEnAttente():
+    donnees = lireFichierJson()
+    while True:
+        for transaction in donnees:
+            if transaction["isTraite"] == False:
+                print(transaction)
+                transaction["isTraite"] = True
+                with open("logs/logsTPE/logsTPE.json", 'w') as fichier:
+                    json.dump(donnees, fichier, indent=4)
+                return transaction
+        print(donnees)
+        
+        
+lireTransactionEnAttente()
