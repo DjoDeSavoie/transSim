@@ -12,8 +12,6 @@ def getTime():
     response = ntp.request('europe.pool.ntp.org', version=3)
     return ctime(response.tx_time)
     
-# affichage du temps du serveur NTP
-print(getTime())
 
 # Fonction retournant la date du serveur NTP
 def getDate():
@@ -29,8 +27,6 @@ def getDate():
     
     return date_formatted
 
-# Affichage de la date du serveur NTP
-print(getDate())
 
 
 # Fonction retournant la date avec 2 ans ajoutés
@@ -50,5 +46,3 @@ def getDateWithTwoYears():
     
     return date_formatted
 
-# Affichage de la date avec 2 ans ajoutés
-print(getDateWithTwoYears())

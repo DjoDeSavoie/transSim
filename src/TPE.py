@@ -42,6 +42,11 @@ def VerifInfosTransac(numeroCarte):
         return False
 
     # Vérification du code PIN
+    verifPin(numeroCarte)
+    
+    ### FONCTION VERIFPIN A MODIFIER -> REQUETE SQL POUR RECCUP PIN DE LA CB GRACE A SON NUMERO DE CARTE ET LE COMPARER 
+    ### FONCTION VERIFPIN A MODIFIER : FAIT UNE BOUCLE WHILE POUR VERIFIER SI LE PIN EST BON OU PAS (3 TENTATIVES MAX) 
+    
     tentatives = 0
     while tentatives < 3:
         pin = getpass.getpass("Veuillez entrer votre code PIN : ")
