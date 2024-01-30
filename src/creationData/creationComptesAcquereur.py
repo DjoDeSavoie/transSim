@@ -136,7 +136,7 @@ def genererCodePin():
 def genererCryptogramme():
     #creation d'un entier aléatoire de 4 chiffres
     crypto = ""
-    for i in range(4):
+    for i in range(3):
         crypto += str(random.randint(0,9))
     return crypto
 

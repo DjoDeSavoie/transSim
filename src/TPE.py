@@ -9,7 +9,7 @@ import pymysql
 
 
 
-##### I l faut recuperer aussi les info de la CB du compte acquereur afin de pouvoir faire transiter l'argentdu compte emmeteur vers le compte acquerreur
+##### Il faut recuperer aussi les info de la CB du compte acquereur afin de pouvoir faire transiter l'argentdu compte emmeteur vers le compte acquerreur
 #En gros, le tpe doit recup aussi le num de compte de l'acquereur (commercant) pour savoir vers qui envoyer l'argent
 #-> peut être qu'il faut aujouter un champ idantifiant le tpe  dans la bdd pour pouvoir faire la requete sql pour recuperer les infos du du compte acquereur
 
