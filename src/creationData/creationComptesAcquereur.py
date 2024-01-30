@@ -2,6 +2,8 @@
 
 import pymysql
 import random
+from datetime import datetime
+
 
 #importe le serveur NTP pour la fonction de récupération de la date actuelle + 2 ans 
 from Server_NTP import getDateWithTwoYears

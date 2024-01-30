@@ -5,18 +5,12 @@
 -- Delete all the values from cartebancaire
 -- DELETE FROM comptebancaireemetteur; 
 
+-- CHANGE THE VALUE OF THE CRYPTOGRAMME
+-- UPDATE cartebancaire
+-- SET cryptogramme = '263'
+-- WHERE numeroCarte = '4972143877517948';
 
-INSERT INTO comptebancaireacquereur (
-    idCompteAcquereur,
-    idBanqueAcquereur,
-    nom,
-    prenom,
-    soldeCompteAcquereur
-  )
-VALUES (
-    '1',
-    1,
-    'Decathlon',
-    'Les Terrasses du Port',
-    100000
-  );
+
+
+
+

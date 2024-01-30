@@ -6,8 +6,27 @@ from Server_NTP import getTime
 import getpass
 import pymysql
 
+# Connexion à la base de données
+conn = pymysql.connect(user='root', host='34.163.159.223', database='transsim')
+cursor = conn.cursor()
 
+def lectureCarte():
+    # Lecture de la carte bancaire
+    numeroCarte = input("Entrez votre numéro de carte bancaire : ")
+    return numeroCarte
 
+def verifCarteExiste(numeroCarte):
+    # Vérifie si le numéro de carte existe dans la base de données
+    cursor.execute("SELECT COUNT(*) FROM cartebancaire WHERE numeroCarte = %s", (numeroCarte,))
+    (count,) = cursor.fetchone()
+    return count > 0 #renvoie true si le numero de carte existe dans la base de données
+
+def verifCarteValide(numeroCarte):
+    # Vérifie si la carte est valide
+    cursor.execute("SELECT validite FROM cartebancaireemmeteur WHERE numeroCarte = %s", (numeroCarte,))
+    (validite,) = cursor.fetchone()
+    return validite > 0
+    
 
 ##### Il faut recuperer aussi les info de la CB du compte acquereur afin de pouvoir faire transiter l'argentdu compte emmeteur vers le compte acquerreur
 #En gros, le tpe doit recup aussi le num de compte de l'acquereur (commercant) pour savoir vers qui envoyer l'argent
@@ -15,33 +34,23 @@ import pymysql
 
 
 # Fonction principale du TPE consistant à lire la carte bancaire et à effectuer toutes les vérifications
-def transaction():
-    # Connexion à la base de données
-    db_connection = pymysql.connect(user='root', host='34.163.159.223', database='transsimclient')
+def processInfoCarte():
 
-    print("Entrez votre numéro de carte bancaire : ")
-    numeroCarte = input()
-
-    # Vérification de l'existence de la carte bancaire
-    if verifSiExisteCB(numeroCarte, db_connection) == False:
-        print("Votre numéro de carte n'existe pas")
-        return False
+# Lecture de la carte bancaire (on simùule la lecture de la carte bancaire en demandant à l'utilisateur de rentrer le numéro de sa carte bancaire)
+    numeroCarte = lectureCarte()
     
+    
+    # Verification de l'existance de la carte
+    verifCarteExiste(numeroCarte)
+    print("Votre numéro de carte n'existe pas")
+
+    verifCarteValide(numeroCarte)
     # Vérification de la validité de la carte bancaire
     ###PAS BESOIN DE RENTRER LA DATE D'EXPIRATION, ON LA RECUPERE DIRECTEMENT DE LA BASE DE DONNEES AVEC UN REQUETE SQL
     ### FONCTION VERIFDATEEXP A MODIFIER -> REQUETE SQL POUR RECCUP DATE EXP DE LA CB GRACE A SON NUMERO DE CARTE
-
-    print("Entrez la date d'expiration de votre carte (MM/AA) : ")
-    date_exp_utilisateur = input()
-
-    infosCB = recupere_infos_cb(numeroCarte, db_connection)
-    
-    # Si la date d'expiration est incorrecte ou la carte est expirée
-    if not verifDateExp(date_exp_utilisateur, infosCB[2], db_connection):
-        print("La date d'expiration est incorrecte ou votre carte est expirée.")
-        return False
     
     # Vérification du code PIN
+    verifPin(numeroCarte)
     
     ### FONCTION VERIFPIN A MODIFIER -> REQUETE SQL POUR RECCUP PIN DE LA CB GRACE A SON NUMERO DE CARTE ET LE COMPARER 
     ### FONCTION VERIFPIN A MODIFIER : FAIT UNE BOUCLE WHILE POUR VERIFIER SI LE PIN EST BON OU PAS (3 TENTATIVES MAX) 

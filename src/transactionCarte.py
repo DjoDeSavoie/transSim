@@ -24,4 +24,8 @@ def modifSoldeComptes(montant, idCompteEmetteur, idCompteAcquereur):
     conn.commit()
     conn.close()
 
-modifSoldeComptes(100, 14387751794, 1)
+
+
+
+# TEST
+# modifSoldeComptes(100, 14387751794, 1)
