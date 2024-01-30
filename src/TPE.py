@@ -6,6 +6,9 @@ from Server_NTP import getTime
 import getpass
 import pymysql
 
+
+
+# Fonction principale du TPE consistant à lire la carte bancaire et à effectuer toutes les vérifications
 def transaction():
     # Connexion à la base de données
     db_connection = pymysql.connect(user='root', host='34.163.159.223', database='transsimclient')
@@ -19,6 +22,9 @@ def transaction():
         return False
     
     # Vérification de la validité de la carte bancaire
+    ###PAS BESOIN DE RENTRER LA DATE D'EXPIRATION, ON LA RECUPERE DIRECTEMENT DE LA BASE DE DONNEES AVEC UN REQUETE SQL
+    ### FONCTION VERIFDATEEXP A MODIFIER -> REQUETE SQL POUR RECCUP DATE EXP DE LA CB GRACE A SON NUMERO DE CARTE
+
     print("Entrez la date d'expiration de votre carte (MM/AA) : ")
     date_exp_utilisateur = input()
 
@@ -30,6 +36,10 @@ def transaction():
         return False
     
     # Vérification du code PIN
+    
+    ### FONCTION VERIFPIN A MODIFIER -> REQUETE SQL POUR RECCUP PIN DE LA CB GRACE A SON NUMERO DE CARTE ET LE COMPARER 
+    ### FONCTION VERIFPIN A MODIFIER : FAIT UNE BOUCLE WHILE POUR VERIFIER SI LE PIN EST BON OU PAS (3 TENTATIVES MAX) 
+    
     tentatives = 0
     while tentatives < 3:
         pin = getpass.getpass("Veuillez entrer votre code PIN : ")
@@ -90,6 +100,9 @@ def bloqueCarte(numeroCarte, db_connection):
 #         return False
 #     return True
 
+
+
+###ON PASS EN PARAM UNIQUEMENT LE NUMERO DE CARTE, LA FONCTION VERFIDATEEXP VA RECUPERER LA DATE D'EXPIRATION DE LA CB DANS LA BASE DE DONNEES ET FAIRE LA VERIFI ELLE MEME
 def verifDateExp(date_exp_utilisateur, date_exp_db, db_connection):
     # Comparaison des dates d'expiration
     if date_exp_utilisateur != date_exp_db.split('-')[1] + '/' + date_exp_db.split('-')[0][2:]:

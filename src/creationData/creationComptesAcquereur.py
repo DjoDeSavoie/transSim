@@ -101,6 +101,8 @@ def creerCompte():
     conn.commit()
     print("Compte créé avec succès! ... \n Création de la carte associée au compte ... \n")
     
+    
+    #CREATION DE LA CARTE ASSOCIEE AU COMPTE
     creationCarte(idCompteEmetteur, idBanque)
     
     
@@ -197,10 +199,9 @@ def creationCarte(idCompteEmetteur, idBanque):
     conn.commit()
     conn.close()
     
-
-
-#teste de la fonction de création de carte avec un id de compte et un id de banque
-#creationCarte("12345678910", "1")
+    print("Carte créée avec succès! \n")
+    
+    
     
 
 
