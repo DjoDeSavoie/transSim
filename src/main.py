@@ -10,4 +10,4 @@ numeroCarte = GetInfosCB()
 if numeroCarte != False:
     VerifInfosTransac(numeroCarte)
 
-createFileLog(numeroCarte, 1, 300)
+EnvoiAutorisation(numeroCarte, 1, 300)
