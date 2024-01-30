@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `comptebancaireacquereur` (
   `idBanqueAcquereur` int UNSIGNED NOT NULL,
   `nom` varchar(128) NOT NULL,
   `prenom` varchar(128) NOT NULL,
-  `soldeCompteAcquereur` int DEFAULT '0',
+  `soldeCompteAcquereur` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`idCompteAcquereur`),
   KEY `fk_banque_comptebancaireacquereur` (`idBanqueAcquereur`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `comptebancaireemetteur` (
   `idBanqueEmetteur` int UNSIGNED NOT NULL,
   `nom` varchar(128) NOT NULL,
   `prenom` varchar(128) NOT NULL,
-  `soldeCompteEmetteur` int NOT NULL,
+  `soldeCompteEmetteur` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`idCompteEmetteur`),
   KEY `fk_banque_comptebancaireemetteur` (`idBanqueEmetteur`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

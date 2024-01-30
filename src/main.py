@@ -5,4 +5,9 @@
 from TPE import *
 
 # Appel de la fonction pour récupérer les informations
-transaction()
+numeroCarte = GetInfosCB()
+
+if numeroCarte != False:
+    VerifInfosTransac(numeroCarte)
+
+createFileLog(numeroCarte, 1, 300)

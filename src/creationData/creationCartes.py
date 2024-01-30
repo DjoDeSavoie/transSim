@@ -84,17 +84,14 @@ def creationCarte(idCompteEmetteur, idBanque):
     pin = genererCodePin()
     crypto = genererCryptogramme()
     
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n\n")
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA \n\n")
     
     
     #on fait la requete sql permettant d'insérer les valeurs dans la base de données
     cursor.execute("INSERT INTO cartebancaire (numeroCarte, idCompteEmetteur, dateExpiration, validite, pin, cryptogramme) VALUES (%s, %s, %s, %s, %s, %s)",
                    (numeroCarte, idCompteEmetteur, dateValidite, 1, pin, crypto))
-    
     conn.commit()
     conn.close()
-    
-
 
 #teste de la fonction de création de carte avec un id de compte et un id de banque
-#creationCarte("12345678910", "1")
+creationCarte("12345678910", "1")
