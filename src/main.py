@@ -2,3 +2,7 @@
 # pour choisir si on veut effectuer une transaction, verifier son solde, se connecter 
 # ou quitter le programme 
 
+from TPE import *
+
+# Appel de la fonction pour récupérer les informations
+transaction()
