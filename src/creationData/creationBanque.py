@@ -1,8 +1,7 @@
 #Fichier permettant la création d'une banque (nom) et de son fichier de logs (transactionsNomBanque.json)
 import pymysql
 from Server_NTP import getDateWithTwoYears
-import os
-import json
+
 
 def creer_banque(nomBanque):
     try:
