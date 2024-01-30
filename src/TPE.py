@@ -42,11 +42,6 @@ def VerifInfosTransac(numeroCarte):
         return False
 
     # Vérification du code PIN
-    verifPin(numeroCarte)
-    
-    ### FONCTION VERIFPIN A MODIFIER -> REQUETE SQL POUR RECCUP PIN DE LA CB GRACE A SON NUMERO DE CARTE ET LE COMPARER 
-    ### FONCTION VERIFPIN A MODIFIER : FAIT UNE BOUCLE WHILE POUR VERIFIER SI LE PIN EST BON OU PAS (3 TENTATIVES MAX) 
-    
     tentatives = 0
     while tentatives < 3:
         pin = getpass.getpass("Veuillez entrer votre code PIN : ")
@@ -80,7 +75,7 @@ def verifPin(infos_cb, pin_saisi, db_connection):
     if not validite:
         print("Carte bloquée")
         return False
-    
+
     if pin_saisi != pin_correct:
         print("PIN invalide.")
         return False
@@ -125,40 +120,39 @@ def verifDateExp(date_exp_utilisateur, date_exp_db, db_connection):
 
 ############################################################ PARTIE ENVOI AUTOR ################################################################
 
-def EnvoiAutorisation(numeroCarte, montant, banque):
-    # Connexion à la base de données
-    db_connection = pymysql.connect(user='root', host='34.163.159.223', database='transsim')
-    print("Envoi de l'autorisation au serveur s'acquisition...")
 
-    # Envoi de l'autorisation
-
-
-
-def createFileLog(idComteEmetteur, idCompteAcquereur, montant):
-    # Obtenir la date et l'heure actuelles
-    dateHeureTransaction = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-
-    # Créer un dictionnaire avec les informations
-    nouvelleLigne = {
-        "numero_compte_emetteur": idComteEmetteur,
-        "numero_compte_acquereur": idCompteAcquereur,
-        "montant_transaction": montant,
-        "date_heure_transaction": dateHeureTransaction
-    }
-
-    cheminFichier = "logs/logsTPE/fichierLogsTPE" + str(banque.capitalize()) + ".json"
-
+def EnvoiAutorisation(idComteEmetteur, idCompteAcquereur, montant):
+    cheminFichier = "logs/logsTPE/logsTPE.json"
+    
     # Vérifier si le fichier existe
     if not os.path.exists(cheminFichier):
         raise FileNotFoundError(f"Le fichier {cheminFichier} n'existe pas.")
 
-    # Si le fichier existe, charger son contenu
-    with open(cheminFichier, "r") as fichier:
-        donneesExistantes = json.load(fichier)
+    # Charger les données existantes ou initialiser avec une liste vide si le fichier est vide
+    try:
+        with open(cheminFichier, "r", encoding='utf-8') as fichier:
+            try:
+                donneesExistantes = json.load(fichier)
+            except json.JSONDecodeError:
+                # Initialiser avec une liste vide si le fichier est vide
+                donneesExistantes = []
+    except IOError as e:
+        print(f"Une erreur est survenue lors de la lecture du fichier: {e}")
+        raise
 
-    # Ajouter la nouvelle ligne
+    # Ajouter la nouvelle ligne avec les informations
+    nouvelleLigne = {
+        "numero_compte_emetteur": idComteEmetteur,
+        "numero_compte_acquereur": idCompteAcquereur,
+        "montant_transaction": montant,
+        "date_heure_transaction": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+        "isTraite": 0
+    }
     donneesExistantes.append(nouvelleLigne)
 
-    # Sauvegarder le fichier avec la nouvelle ligne
-    with open(cheminFichier, "w") as fichier:
+    # Sauvegarder dans le fichier JSON
+    with open(cheminFichier, "w", encoding='utf-8') as fichier:
         json.dump(donneesExistantes, fichier, indent=2)
+
+    print("Transaction enregistrée dans le fichier de logs.")
+    
