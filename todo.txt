@@ -16,15 +16,16 @@ Implémentation du serveur ntp (network time protocol) : fichier -> fonction qui
 ###########  Partie python :
 
 *fcts tpe 
-    -> recup infos cb puis verif (numero valide ...)
+    -> recup infos cb puis verif (numero valide ...) 
     -> envoi demande autor au serv acqui 
     -> ajout infos sur la transaction a sa fin 
+    -> creation logs tpe a la fin de la transac
 
 *mettre en place fichiers (ou autre si solution plus facile/ pratique en python) pour serveurs acquisitions; 
     ->puis mettre fct qui parse constamment ces fichiers pour detecter si il y'a ou pas de nouveaux logs
     ->mettre fct qui ajoute des eltms a ces fichiers par exemple lors d'uene demande d'autor du tpe, ajouter ligne en haut dans le fichier serv acqui
 
-*fcts serv acqui
+*fcts serv acqui 
     ->verif si dans meme banque 
         -> si oui, fct envoi requete a serv autor (ajout ligne dans fichier serv autor)
         -> si non, fct envoi requete a res interb (ajout ligne dans fichier res interb)

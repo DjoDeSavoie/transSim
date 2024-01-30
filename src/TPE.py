@@ -2,53 +2,45 @@
 
 from getpass4 import getpass
 from Server_NTP import getTime
+from datetime import datetime
 
+import json
+import os
 import getpass
 import pymysql
 
-# Connexion à la base de données
-conn = pymysql.connect(user='root', host='34.163.159.223', database='transsim')
-cursor = conn.cursor()
+############################################################ PARTIE VERIFICATION CB ################################################################
 
-def lectureCarte():
-    # Lecture de la carte bancaire
-    numeroCarte = input("Entrez votre numéro de carte bancaire : ")
-    return numeroCarte
+banque = "lcl"
 
-def verifCarteExiste(numeroCarte):
-    # Vérifie si le numéro de carte existe dans la base de données
-    cursor.execute("SELECT COUNT(*) FROM cartebancaire WHERE numeroCarte = %s", (numeroCarte,))
-    (count,) = cursor.fetchone()
-    return count > 0 #renvoie true si le numero de carte existe dans la base de données
+def GetInfosCB():
+    # Connexion à la base de données
+    db_connection = pymysql.connect(user='root', host='34.163.159.223', database='transsim')
+    print("Entrez votre numéro de carte bancaire : 4132438296994163")
+    numeroCarte = input()
+    # Vérification de l'existence de la carte bancaire
+    if verifSiExisteCB(numeroCarte, db_connection) == False:
+        print("Votre numéro de carte n'existe pas")
+        return False
+    else :
+        return numeroCarte
 
-def verifCarteValide(numeroCarte):
-    # Vérifie si la carte est valide
-    cursor.execute("SELECT validite FROM cartebancaireemmeteur WHERE numeroCarte = %s", (numeroCarte,))
-    (validite,) = cursor.fetchone()
-    return validite > 0
+
+def VerifInfosTransac(numeroCarte):
+    # Connexion à la base de données
+    db_connection = pymysql.connect(user='root', host='34.163.159.223', database='transsim')
     
-
-##### Il faut recuperer aussi les info de la CB du compte acquereur afin de pouvoir faire transiter l'argentdu compte emmeteur vers le compte acquerreur
-#En gros, le tpe doit recup aussi le num de compte de l'acquereur (commercant) pour savoir vers qui envoyer l'argent
-#-> peut être qu'il faut aujouter un champ idantifiant le tpe  dans la bdd pour pouvoir faire la requete sql pour recuperer les infos du du compte acquereur
-
-
-# Fonction principale du TPE consistant à lire la carte bancaire et à effectuer toutes les vérifications
-def processInfoCarte():
-
-# Lecture de la carte bancaire (on simùule la lecture de la carte bancaire en demandant à l'utilisateur de rentrer le numéro de sa carte bancaire)
-    numeroCarte = lectureCarte()
-    
-    
-    # Verification de l'existance de la carte
-    verifCarteExiste(numeroCarte)
-    print("Votre numéro de carte n'existe pas")
-
-    verifCarteValide(numeroCarte)
     # Vérification de la validité de la carte bancaire
-    ###PAS BESOIN DE RENTRER LA DATE D'EXPIRATION, ON LA RECUPERE DIRECTEMENT DE LA BASE DE DONNEES AVEC UN REQUETE SQL
-    ### FONCTION VERIFDATEEXP A MODIFIER -> REQUETE SQL POUR RECCUP DATE EXP DE LA CB GRACE A SON NUMERO DE CARTE
-    
+    print("Entrez la date d'expiration de votre carte (MM/AA) : ")
+    date_exp_utilisateur = input()
+
+    infosCB = recupere_infos_cb(numeroCarte, db_connection)
+
+    # Si la date d'expiration est incorrecte ou la carte est expirée
+    if not verifDateExp(date_exp_utilisateur, infosCB[2], db_connection):
+        print("La date d'expiration est incorrecte ou votre carte est expirée.")
+        return False
+
     # Vérification du code PIN
     verifPin(numeroCarte)
     
@@ -58,8 +50,10 @@ def processInfoCarte():
     tentatives = 0
     while tentatives < 3:
         pin = getpass.getpass("Veuillez entrer votre code PIN : ")
+        pin = int(pin)
+        
         if verifPin(infosCB, pin, db_connection):
-            print("Transaction réussie.")
+            print("Vérification réussie.")
             return True
         else:
             tentatives += 1
@@ -86,7 +80,7 @@ def verifPin(infos_cb, pin_saisi, db_connection):
     if not validite:
         print("Carte bloquée")
         return False
-
+    
     if pin_saisi != pin_correct:
         print("PIN invalide.")
         return False
@@ -99,37 +93,28 @@ def bloqueCarte(numeroCarte, db_connection):
         cursor.execute(update_query, (numeroCarte,))
         db_connection.commit()
 
-#mettre dans fichier cb
-
-# def luhn(CB):
-#     # Vérification de la validité de la clé de luhn CB
-#     somme = 0
-#     for i in range(len(CB)):
-#         chiffre = int(CB[i])
-#         if i % 2 == 0:
-#             chiffre *= 2
-#             if chiffre > 9:
-#                 chiffre -= 9
-#         somme += chiffre
-#     if somme % 10 != 0:
-#         return False
-#     return True
+def DebloqueCarte(numeroCarte, db_connection):
+    with db_connection.cursor() as cursor:
+        update_query = "UPDATE cartebancaire SET validite = 1 WHERE numeroCarte = %s;"
+        cursor.execute(update_query, (numeroCarte,))
+        db_connection.commit()
 
 
-
-###ON PASS EN PARAM UNIQUEMENT LE NUMERO DE CARTE, LA FONCTION VERFIDATEEXP VA RECUPERER LA DATE D'EXPIRATION DE LA CB DANS LA BASE DE DONNEES ET FAIRE LA VERIFI ELLE MEME
 def verifDateExp(date_exp_utilisateur, date_exp_db, db_connection):
+    # Formatage de la date d'expiration de la base de données en chaîne
+    date_exp_db_str = date_exp_db.strftime('%m/%y')  # Format MM/AA
+
     # Comparaison des dates d'expiration
-    if date_exp_utilisateur != date_exp_db.split('-')[1] + '/' + date_exp_db.split('-')[0][2:]:
+    if date_exp_utilisateur != date_exp_db_str:
         print("La date d'expiration entrée ne correspond pas à celle de la base de données.")
         return False
 
     # Vérification de la validité de la date par rapport au serveur NTP
     ntp_time = getTime()
-    ntp_date = ntp_time.strptime(ntp_time, "%a %b %d %H:%M:%S %Y")
+    ntp_date = datetime.strptime(ntp_time, "%a %b %d %H:%M:%S %Y")
     
     # Date d'expiration à partir de la base de données
-    exp_date = ntp_time.strptime('20' + date_exp_db.split('-')[0][2:] + '-' + date_exp_db.split('-')[1] + '-01', '%Y-%m-%d')
+    exp_date = datetime.strptime('20' + date_exp_db.strftime('%y-%m-01'), '%Y-%m-%d')
     
     # Vérifie si la carte est expirée
     if exp_date < ntp_date:
@@ -138,3 +123,42 @@ def verifDateExp(date_exp_utilisateur, date_exp_db, db_connection):
     
     return True
 
+############################################################ PARTIE ENVOI AUTOR ################################################################
+
+def EnvoiAutorisation(numeroCarte, montant, banque):
+    # Connexion à la base de données
+    db_connection = pymysql.connect(user='root', host='34.163.159.223', database='transsim')
+    print("Envoi de l'autorisation au serveur s'acquisition...")
+
+    # Envoi de l'autorisation
+
+
+
+def createFileLog(idComteEmetteur, idCompteAcquereur, montant):
+    # Obtenir la date et l'heure actuelles
+    dateHeureTransaction = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+
+    # Créer un dictionnaire avec les informations
+    nouvelleLigne = {
+        "numero_compte_emetteur": idComteEmetteur,
+        "numero_compte_acquereur": idCompteAcquereur,
+        "montant_transaction": montant,
+        "date_heure_transaction": dateHeureTransaction
+    }
+
+    cheminFichier = "logs/logsTPE/fichierLogsTPE" + str(banque.capitalize()) + ".json"
+
+    # Vérifier si le fichier existe
+    if not os.path.exists(cheminFichier):
+        raise FileNotFoundError(f"Le fichier {cheminFichier} n'existe pas.")
+
+    # Si le fichier existe, charger son contenu
+    with open(cheminFichier, "r") as fichier:
+        donneesExistantes = json.load(fichier)
+
+    # Ajouter la nouvelle ligne
+    donneesExistantes.append(nouvelleLigne)
+
+    # Sauvegarder le fichier avec la nouvelle ligne
+    with open(cheminFichier, "w") as fichier:
+        json.dump(donneesExistantes, fichier, indent=2)
