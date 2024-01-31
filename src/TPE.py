@@ -11,12 +11,11 @@ import pymysql
 
 ############################################################ PARTIE VERIFICATION CB ################################################################
 
-banque = "lcl"
 
 def GetInfosCB():
     # Connexion à la base de données
     db_connection = pymysql.connect(user='root', host='34.163.159.223', database='transsim')
-    print("Entrez votre numéro de carte bancaire : 4132438296994163")
+    print("Entrez votre numéro de carte bancaire : 4132140704730501")
     numeroCarte = input()
     # Vérification de l'existence de la carte bancaire
     if verifSiExisteCB(numeroCarte, db_connection) == False:
