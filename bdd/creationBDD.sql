@@ -1,3 +1,28 @@
+-- SCRIPT POUR LA MODIFICATION / AJOUT DE VALEURS et PROPRIETES / SUPPRESSION DE VALEURS et PROPRIETE
+
+
+
+-- Delete all the values from cartebancaire
+-- DELETE FROM comptebancaireemetteur; 
+
+--DELETE FROM comptebancaireacquereur;
+
+-- CHANGE THE VALUE OF THE CRYPTOGRAMME
+-- UPDATE cartebancaire
+-- SET cryptogramme = '263'
+-- WHERE numeroCarte = '4972143877517948';
+
+-- ALTER TABLE tpe
+-- DROP PRIMARY KEY,
+-- ADD PRIMARY KEY (idTpe);
+
+
+
+
+
+
+
+
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
@@ -123,7 +148,11 @@ CREATE TABLE IF NOT EXISTS `comptebancaireemetteur` (
 
 DROP TABLE IF EXISTS `tpe`;
 CREATE TABLE IF NOT EXISTS `tpe` (
+<<<<<<< Updated upstream
   `idTpe` bigint UNSIGNED NOT NULL,
+=======
+    `idTpe` BIGINT UNSIGNED NOT NULL,
+>>>>>>> Stashed changes
   `numeroTransaction` int UNSIGNED NOT NULL,
   `idBanqueAcquereur` int UNSIGNED NOT NULL,
   `numeroAutorisation` int UNSIGNED NOT NULL,

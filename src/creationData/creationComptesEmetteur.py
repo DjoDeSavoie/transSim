@@ -190,7 +190,7 @@ def creationCarte(idCompteEmetteur, idBanque):
     numero16 = cleDeLuhn(numero1, numero234, numero5a15)
     
     #on concatène les valeurs
-    numeroCarte = str(numero1) + str(numero234) + str(numero5a15) + str(numero16)    
+    numeroCarte = str(numero1) + str(numero234) + str(numero5a15) + str(numero16)
     
     dateValidite = getDateWithTwoYears()
     pin = genererCodePin()
