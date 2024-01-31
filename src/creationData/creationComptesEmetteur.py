@@ -66,14 +66,14 @@ def creationIdCompteBancaire():
     idCompte = random11number()
     
     #on vérifie que l'id n'existe pas déjà 
-    cursor.execute("SELECT idCompteAcquereur FROM comptebancaireacquereur WHERE idCompteAcquereur = %s", (idCompte))
+    cursor.execute("SELECT idCompteEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s", (idCompte))
     idCompteExiste = cursor.fetchone()
     
     #si l'id existe déjà ou qu'il est de longuer différente de 11, on en génère un nouveau
 
     while idCompteExiste != None or len(idCompte) != 11:
         idCompte = random11number()
-        cursor.execute("SELECT idCompteAcquereur FROM comptebancaireacquereur WHERE idCompteAcquereur = %s", (idCompte))
+        cursor.execute("SELECT idCompteEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s", (idCompte))
         idCompteExiste = cursor.fetchone()
         
     return idCompte
@@ -94,24 +94,24 @@ def creerCompte():
     nomsBanques = recupererNomsBanques()
     choixBanque = choisirBanque(nomsBanques)
     idBanque = recupererIdBanqueChoisie(choixBanque)
-    idCompteAcquereur = creationIdCompteBancaire()
+    idCompteEmetteur = creationIdCompteBancaire()
     solde = 0
     
     
     # Exécutez la requête SQL pour créer un compte
-    cursor.execute("INSERT INTO comptebancaireacquereur (idCompteAcquereur, idBanqueEmetteur, nom, prenom, soldeCompteEmetteur) VALUES (%s, %s, %s, %s, %s)", (idCompteAcquereur, idBanque, nom, prenom, solde))
+    cursor.execute("INSERT INTO comptebancaireemetteur (idCompteEmetteur, idBanqueEmetteur, nom, prenom, soldeCompteEmetteur) VALUES (%s, %s, %s, %s, %s)", (idCompteEmetteur, idBanque, nom, prenom, solde))
     conn.commit()
     print("Compte créé avec succès! ... \n Création de la carte associée au compte ... \n")
     
     
     #CREATION DE LA CARTE ASSOCIEE AU COMPTE
-    creationTPE(idCompteAcquereur, idBanque)
+    creationCarte(idCompteEmetteur, idBanque)
     
     
     
     
 ###############################################################################################
-################################# CREATION D'UN TPE ASSOCIE ###################################
+################################### CREATION D'UNE CARTE ######################################
 ###############################################################################################
 
 
@@ -121,15 +121,38 @@ def creerCompte():
 tabNumCarte = {"creditMutuel" : 132, "banquePostale" : 970, "lcl" : 972, "societeGenerale" : 973, "bnp" : 974, "caisseEpargne" : 978, "creditAgricole":131}
 
 
-#création du TPE associé au compte acquéreur, dès lors qu'un compte acquéreur est créé
-#on crée un TPE par acquéreur
+#création des cartes bancaires associées aux comptes acquéreurs, dès lors qu'un compte acquéreur est créé
+#on crée une carte par acquéreur
 
 
+#on génére un code pin aléatoire
+def genererCodePin():
+    #creation d'un entier aléatoire de 4 chiffres
+    codePin = ""
+    for i in range(4):
+        codePin += str(random.randint(0,9))
+    return codePin
 
+
+#on génère un code de sécurité aléatoire
+def genererCryptogramme():
+    #creation d'un entier aléatoire de 4 chiffres
+    crypto = ""
+    for i in range(3):
+        crypto += str(random.randint(0,9))
+    return crypto
+
+#pour le choix du réseau émetteur de la carte, nous avons opté polur l'option der l'aléatoire : 
+#on choisit aléatoirement un réseau émetteur parmi les 3 proposés pour faire plus simple
+def choixReseauEmetteurCarte():
+    #choix aléatoire d'un réseau émetteur (3 pour américan express, 4 pour visa et 5 pour mastercard)
+    valeur1 = random.randint(3,5)
+    return valeur1 #la 1ère valeur du numéro de carte
+    
 
 
 #on génère un numéro de carte 
-def genereIdTpeEnFonctionBanque(idBanque):
+def genereNumeroCarteEnFonctionBanque(idBanque):
     
     #on récupère le numéro de la banque
     cursor.execute("SELECT nomBanque FROM banque WHERE idBanque = %s", (idBanque))
@@ -137,21 +160,43 @@ def genereIdTpeEnFonctionBanque(idBanque):
     #on génère un numéro de carte de 16 chiffres
     valeur234 = tabNumCarte[str(nomBanque)]
     return valeur234 #les 2, 3, 4èmes valeur du numéro de carte
+
+#fonction générant la clé de luhn à parti des valeurs précédentes
+def cleDeLuhn(numero1, numero234, numero5a15):
+    #on concatène les valeurs
+    numero = str(numero1) + str(numero234) + str(numero5a15)
+    #on calcule la clé de luhn
+    somme = 0
+    for i in range(15):
+        if i%2 == 0:
+            somme += int(numero[i])
+        else:
+            if int(numero[i])*2 > 9:
+                somme += int(numero[i])*2 - 9
+            else:
+                somme += int(numero[i])*2
+    cle = 10 - somme%10
+    return cle #la 16ème valeur du numéro de carte    
     
 
 
 
-def creationTPE(idCompteAcquereur, idBanque):
-    numero234 = genereIdTpeEnFonctionBanque(idBanque)
-    numero5a15 = idCompteAcquereur
+def creationCarte(idCompteEmetteur, idBanque):
+    numero1 = choixReseauEmetteurCarte()
+    numero234 = genereNumeroCarteEnFonctionBanque(idBanque)
+    numero5a15 = idCompteEmetteur
+    numero16 = cleDeLuhn(numero1, numero234, numero5a15)
     
-    #on concatène les valeurs pour créer un unique id de tpe
-    idTPE = str(numero234) + str(numero5a15)   
-      
+    #on concatène les valeurs
+    numeroCarte = str(numero1) + str(numero234) + str(numero5a15) + str(numero16)    
+    
+    dateValidite = getDateWithTwoYears()
+    pin = genererCodePin()
+    crypto = genererCryptogramme()    
     
     #on fait la requete sql permettant d'insérer les valeurs dans la base de données
-    cursor.execute("INSERT INTO TPE (idTPE, idCompteAcquereur) VALUES (%s, %s)",
-                   (idTPE, idCompteAcquereur))
+    cursor.execute("INSERT INTO cartebancaire (numeroCarte, idCompteEmetteur, dateExpiration, validite, pin, cryptogramme) VALUES (%s, %s, %s, %s, %s, %s)",
+                   (numeroCarte, idCompteEmetteur, dateValidite, 1, pin, crypto))
     
     conn.commit()
     conn.close()
