@@ -1,20 +1,29 @@
 [
-  {
-    "idLog": 1,
-    "idTPE": 1,
-    "numero_compte_emetteur": false,
-    "numero_compte_acquereur": 1,
-    "montant_transaction": 300,
-    "date_heure_transaction": "31/01/2024 10:56:23",
-    "isTraite": 0
-  },
-  {
-    "idLog": 2,
-    "idTPE": 1,
-    "numero_compte_emetteur": false,
-    "numero_compte_acquereur": 1,
-    "montant_transaction": 300,
-    "date_heure_transaction": "31/01/2024 11:02:31",
-    "isTraite": 0
-  }
+    {
+        "idLog": 1,
+        "idTPE": 1,
+        "numero_compte_emetteur": false,
+        "numero_compte_acquereur": 1,
+        "montant_transaction": 300,
+        "date_heure_transaction": "31/01/2024 10:56:23",
+        "isTraite": true
+    },
+    {
+        "idLog": 2,
+        "idTPE": 1,
+        "numero_compte_emetteur": false,
+        "numero_compte_acquereur": 1,
+        "montant_transaction": 300,
+        "date_heure_transaction": "31/01/2024 11:02:31",
+        "isTraite": true
+    },
+    {
+        "idLog": 3,
+        "idTPE": 1,
+        "numero_compte_emetteur": "3132313876236107",
+        "numero_compte_acquereur": 1,
+        "montant_transaction": 300,
+        "date_heure_transaction": "31/01/2024 10:30:37",
+        "isTraite": true
+    }
 ]

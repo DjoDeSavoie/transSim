@@ -95,13 +95,13 @@ def creerCompte():
     choixBanque = choisirBanque(nomsBanques)
     idBanque = recupererIdBanqueChoisie(choixBanque)
     idCompteEmetteur = creationIdCompteBancaire()
-    solde = 0
+    solde = 1500
     
     
     # Exécutez la requête SQL pour créer un compte
     cursor.execute("INSERT INTO comptebancaireemetteur (idCompteEmetteur, idBanqueEmetteur, nom, prenom, soldeCompteEmetteur) VALUES (%s, %s, %s, %s, %s)", (idCompteEmetteur, idBanque, nom, prenom, solde))
     conn.commit()
-    print("Compte créé avec succès! ... \n Création de la carte associée au compte ... \n")
+    print("Compte créé avec succès! ... \n")
     
     
     #CREATION DE LA CARTE ASSOCIEE AU COMPTE
@@ -182,6 +182,8 @@ def cleDeLuhn(numero1, numero234, numero5a15):
 
 
 def creationCarte(idCompteEmetteur, idBanque):
+    print("Création de la carte associée au compte ... \n")
+    
     numero1 = choixReseauEmetteurCarte()
     numero234 = genereNumeroCarteEnFonctionBanque(idBanque)
     numero5a15 = idCompteEmetteur
