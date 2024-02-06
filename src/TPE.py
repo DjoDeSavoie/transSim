@@ -11,12 +11,11 @@ import pymysql
 
 ############################################################ PARTIE VERIFICATION CB ################################################################
 
-banque = "lcl"
 
 def GetInfosCB():
     # Connexion à la base de données
     db_connection = pymysql.connect(user='root', host='34.163.159.223', database='transsim')
-    print("Entrez votre numéro de carte bancaire : 4132438296994163")
+    print("Entrez votre numéro de carte bancaire : 4132140704730501")
     numeroCarte = input()
     # Vérification de l'existence de la carte bancaire
     if verifSiExisteCB(numeroCarte, db_connection) == False:
@@ -120,7 +119,20 @@ def verifDateExp(date_exp_utilisateur, date_exp_db, db_connection):
 
 ############################################################ PARTIE ENVOI AUTOR ################################################################
 
+# Fonction pour obtenir le prochain ID
+def get_next_id(file_path='logs/logsTPE/logsTPE.json'):
+    try:
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+            # Trouver le plus grand idLog existant
+            existing_ids = [entry['idLog'] for entry in data]
+            next_id = max(existing_ids) + 1
+    except (FileNotFoundError, json.JSONDecodeError):
+        next_id = 1
 
+    return next_id
+
+# Fonction pour envoyer une autorisation au serveur d'acquisition
 def EnvoiAutorisation(idComteEmetteur, idCompteAcquereur, montant):
     cheminFichier = "logs/logsTPE/logsTPE.json"
     
@@ -140,8 +152,13 @@ def EnvoiAutorisation(idComteEmetteur, idCompteAcquereur, montant):
         print(f"Une erreur est survenue lors de la lecture du fichier: {e}")
         raise
 
+    # Obtenez le prochain ID
+    next_id = get_next_id()
+
     # Ajouter la nouvelle ligne avec les informations
     nouvelleLigne = {
+        "idLog" : next_id,
+        "idTPE" : 1,
         "numero_compte_emetteur": idComteEmetteur,
         "numero_compte_acquereur": idCompteAcquereur,
         "montant_transaction": montant,

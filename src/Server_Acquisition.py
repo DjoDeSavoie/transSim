@@ -7,16 +7,28 @@
 
 import json
 
+valeurIndiceLecture = 0
 
-#Fonction de lecture du fichier json de la banque correspondante
+# Fonction de lecture du fichier json de la banque correspondante
 def lireFichierJson():
-    with open("logs/logsTPE/logsTPE.json", 'r') as fichier:
-        donnees = json.load(fichier)
-    return donnees
+    try:
+        with open("logs/logsTPE/logsTPE.json", 'r') as fichier:
+            donnees = json.load(fichier)
+        return donnees
+    except json.JSONDecodeError:
+        print("Erreur : Le fichier JSON est vide ou mal formaté.")
+        return None
 
-#effectue une lecture en boucle pour accéder à la dernier transaction en attente
+#effectue une lecture en boucle pour accéder à la derniere transaction en attente (non traitée)
 def lireTransactionEnAttente():
     donnees = lireFichierJson()
+    
+    #verification si fichier vide
+    if donnees is None:
+        print("Le fichier est vide")
+        return False
+    
+    #si fichier non vide
     while True:
         for transaction in donnees:
             if transaction["isTraite"] == False:
@@ -26,6 +38,8 @@ def lireTransactionEnAttente():
                     json.dump(donnees, fichier, indent=4)
                 return transaction
         print(donnees)
+        return
         
         
 lireTransactionEnAttente()
+

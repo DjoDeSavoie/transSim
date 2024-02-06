@@ -16,8 +16,9 @@ Implémentation du serveur ntp (network time protocol) : fichier -> fonction qui
 ###########  Partie python :
 
 *fcts tpe 
-    -> recup infos cb puis verif (numero valide ...) 
-    -> envoi demande autor au serv acqui 
+    -> recup infos cb puis verif (numero valide ...) OK
+    -> envoi demande autor au serv acqui OK
+    
     -> ajout infos sur la transaction a sa fin 
     -> creation logs tpe a la fin de la transac
 

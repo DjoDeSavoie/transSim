@@ -8,6 +8,6 @@ from TPE import *
 numeroCarte = GetInfosCB()
 
 if numeroCarte != False:
-    VerifInfosTransac(numeroCarte)
+    if VerifInfosTransac(numeroCarte) == True:
+        EnvoiAutorisation(numeroCarte, 1, 300)
 
-EnvoiAutorisation(numeroCarte, 1, 300)
