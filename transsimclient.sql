@@ -30,11 +30,11 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `autorisationtransaction`;
 CREATE TABLE IF NOT EXISTS `autorisationtransaction` (
   `numeroAutorisation` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `idBanqueEmetteur` int UNSIGNED NOT NULL,
+  `idCompteEmetteur` int UNSIGNED NOT NULL,
+  `idCompteAcquereur` int UNSIGNED NOT NULL,
   `dateAutorisation` date NOT NULL,
   `montantAutorisation` int NOT NULL,
   PRIMARY KEY (`numeroAutorisation`),
-  KEY `fk_banqueemetteur_autorisationtransaction` (`idBanqueEmetteur`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
