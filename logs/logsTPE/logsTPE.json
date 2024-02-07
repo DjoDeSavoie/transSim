@@ -15,7 +15,7 @@
         "numero_compte_acquereur": 1,
         "montant_transaction": 300,
         "date_heure_transaction": "31/01/2024 10:56:23",
-        "isTraite": false
+        "isTraite": true
     },
     {
         "idLog": 3,
@@ -33,7 +33,7 @@
         "numero_compte_acquereur": 1,
         "montant_transaction": 300,
         "date_heure_transaction": "31/01/2024 10:56:23",
-        "isTraite": false
+        "isTraite": true
     },
     {
         "idLog": 5,
@@ -42,6 +42,6 @@
         "numero_compte_acquereur": 1,
         "montant_transaction": 300,
         "date_heure_transaction": "31/01/2024 10:56:23",
-        "isTraite": false
+        "isTraite": true
     }
 ]
