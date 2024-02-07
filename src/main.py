@@ -3,11 +3,13 @@
 # ou quitter le programme 
 
 from TPE import *
+from Server_Autorisation import *
 
-# Appel de la fonction pour récupérer les informations
-numeroCarte = GetInfosCB()
+#Appel de la fonction pour récupérer les informations
+# numeroCarte = GetInfosCB()
 
-if numeroCarte != False:
-    if VerifInfosTransac(numeroCarte) == True:
-        EnvoiAutorisation(numeroCarte, 1, 300)
+# if numeroCarte != False:
+#     if VerifInfosTransac(numeroCarte) == True:
+#         EnvoiAutorisation(numeroCarte, 1, 300)
 
+traiterTransaction(1)

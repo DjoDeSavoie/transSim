@@ -38,6 +38,7 @@ Implémentation du serveur ntp (network time protocol) : fichier -> fonction qui
 *fcts serv autor
     ->verifs carte (opposition...)
     ->verifs cb(solde...)
+    
     ->genere autor et ajout autor dans fichier autor sinon log dans fichier log ; retourne booleen si reussit ou pas
     ->envoi num autor serv acqui/erreur
 
