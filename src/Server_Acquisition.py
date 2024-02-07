@@ -32,8 +32,8 @@ def lireTransactionEnAttente():
     while True:
         for transaction in donnees:
             if transaction["isTraite"] == False:
-                print(transaction)
-                transaction["isTraite"] = True
+                print("la transaciton non traitée est la transaction : " + transaction["id"] + "\n")
+                # transaction["isTraite"] = True
                 with open("logs/logsTPE/logsTPE.json", 'w') as fichier:
                     json.dump(donnees, fichier, indent=4)
                 return transaction
