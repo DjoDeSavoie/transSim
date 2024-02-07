@@ -1,45 +1,44 @@
-#Fichier contenant les fonctions du serveur d'acquisition
-
-#Le serveur d'acquisition consiste en une boucle sans fin qui consulte le fichier de logs  et traite les transactions en attente
-
-
-#Importation des modules nécessaires
-
 import json
+import time
 
-valeurIndiceLecture = 0
+def lireFichierJson(chemin_fichier):
+    with open(chemin_fichier, 'r') as f:
+        return json.load(f)
 
-# Fonction de lecture du fichier json de la banque correspondante
-def lireFichierJson():
-    try:
-        with open("logs/logsTPE/logsTPE.json", 'r') as fichier:
-            donnees = json.load(fichier)
-        return donnees
-    except json.JSONDecodeError:
-        print("Erreur : Le fichier JSON est vide ou mal formaté.")
-        return None
+def ecrireFichierJson(chemin_fichier, contenu):
+    with open(chemin_fichier, 'w') as f:
+        json.dump(contenu, f, indent=4)
 
-#effectue une lecture en boucle pour accéder à la derniere transaction en attente (non traitée)
-def lireTransactionEnAttente():
-    donnees = lireFichierJson()
-    
-    #verification si fichier vide
-    if donnees is None:
-        print("Le fichier est vide")
-        return False
-    
-    #si fichier non vide
-    while True:
-        for transaction in donnees:
-            if transaction["isTraite"] == False:
-                print("la transaciton non traitée est la transaction : " + transaction["id"] + "\n")
-                # transaction["isTraite"] = True
-                with open("logs/logsTPE/logsTPE.json", 'w') as fichier:
-                    json.dump(donnees, fichier, indent=4)
-                return transaction
-        print(donnees)
+def traiterDemande(demande):
+    if not demande["isTraite"]:
+        print("Traitement de la demande : ", demande['idLog'])
+        demande["isTraite"] = True
+
+def checkDemandesNonTraitees(demandes):
+    demande_a_traiter = None
+    for demande in demandes:
+        if not demande["isTraite"]:
+            traiterDemande(demande)
+            demande_a_traiter = demande
+            break
+    if demande_a_traiter is None:
+        print("Toutes les demandes ont déjà été traitées.")
         return
-        
-        
-lireTransactionEnAttente()
 
+    # Mettre à jour la demande traitée dans le fichier JSON
+    ecrireFichierJson(chemin_fichier_json, demandes)
+
+    # Vérifier s'il y a d'autres demandes non traitées
+    for demande in demandes:
+        if not demande["isTraite"]:
+            print("Il reste d'autres demandes non traitées.")
+            break
+
+if __name__ == "__main__":
+    chemin_fichier_json = "logs/logsTPE/logsTPE.json"
+
+    while True:
+        demandes = lireFichierJson(chemin_fichier_json)
+        checkDemandesNonTraitees(demandes)
+        # Attendre un certain temps avant de vérifier à nouveau le fichier JSON
+        time.sleep(5)  # Attendre 5 secondes avant la prochaine vérification
