@@ -1,9 +1,7 @@
 import json
 import time
 
-#variable contenant la valeur de la demande a traiter
-demandeTransitVersServeurAutorisation = None
-
+from Server_Autorisation import genererAutorisation
 
 def lireFichierJson(chemin_fichier):
     with open(chemin_fichier, 'r') as f:
@@ -18,16 +16,15 @@ def traiterDemande(demande):
         print("Traitement de la demande : ", demande['idLog'])
         demande["isTraite"] = True
 
-
 def checkDemandesNonTraitees(demandes):
     demande_a_traiter = None
     for demande in demandes:
         if not demande["isTraite"]:
             traiterDemande(demande)
             demande_a_traiter = demande
-            print("Demande à traiter : ", demande)
-            #on stocke la demande dans la variable demandeTransitVersServeurAutorisation
-            demandeTransitVersServeurAutorisation = demande
+            print("Id de la demande à traiter : ", demande['idLog'])
+            #on stocke la demande dans la variable idDemande
+            genererAutorisation(demande['idLog'])
             break
     if demande_a_traiter is None:
         print("Toutes les demandes ont déjà été traitées.")
