@@ -99,68 +99,13 @@ def creerCompte():
     
     
     # Exécutez la requête SQL pour créer un compte
-    cursor.execute("INSERT INTO comptebancaireacquereur (idCompteAcquereur, idBanqueEmetteur, nom, prenom, soldeCompteEmetteur) VALUES (%s, %s, %s, %s, %s)", (idCompteAcquereur, idBanque, nom, prenom, solde))
+    cursor.execute("INSERT INTO comptebancaireacquereur (idCompteAcquereur, idBanqueAcquereur, nom, prenom, soldeCompteAcquereur) VALUES (%s, %s, %s, %s, %s)", (idCompteAcquereur, idBanque, nom, prenom, solde))
     conn.commit()
-    print("Compte créé avec succès! ... \n Création de la carte associée au compte ... \n")
+    print("Compte créé avec succès! ... \n")
     
-    
-    #CREATION DE LA CARTE ASSOCIEE AU COMPTE
-    creationTPE(idCompteAcquereur, idBanque)
-    
-    
-    
-    
-###############################################################################################
-################################# CREATION D'UN TPE ASSOCIE ###################################
-###############################################################################################
-
-
-
-
-#creation d'un tableau associant les id d'une banque aux 3 premiers chiffres de sa carte
-tabNumCarte = {"creditMutuel" : 132, "banquePostale" : 970, "lcl" : 972, "societeGenerale" : 973, "bnp" : 974, "caisseEpargne" : 978, "creditAgricole":131}
-
-
-#création du TPE associé au compte acquéreur, dès lors qu'un compte acquéreur est créé
-#on crée un TPE par acquéreur
-
-
-
-
-
-#on génère un numéro de carte 
-def genereIdTpeEnFonctionBanque(idBanque):
-    
-    #on récupère le numéro de la banque
-    cursor.execute("SELECT nomBanque FROM banque WHERE idBanque = %s", (idBanque))
-    nomBanque = cursor.fetchone()[0]
-    #on génère un numéro de carte de 16 chiffres
-    valeur234 = tabNumCarte[str(nomBanque)]
-    return valeur234 #les 2, 3, 4èmes valeur du numéro de carte
-    
-
-
-
-def creationTPE(idCompteAcquereur, idBanque):
-    numero234 = genereIdTpeEnFonctionBanque(idBanque)
-    numero5a15 = idCompteAcquereur
-    
-    #on concatène les valeurs pour créer un unique id de tpe
-    idTPE = str(numero234) + str(numero5a15)   
-      
-    
-    #on fait la requete sql permettant d'insérer les valeurs dans la base de données
-    cursor.execute("INSERT INTO TPE (idTPE, idCompteAcquereur) VALUES (%s, %s)",
-                   (idTPE, idCompteAcquereur))
-    
-    conn.commit()
-    conn.close()
-    
-    print("Carte créée avec succès! \n")
-    
-    
-    
-
-
-# creation d'un compte acquéreur
 creerCompte()
+    
+
+    
+    
+    
