@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mar. 23 jan. 2024 à 16:24
+-- Généré le : mar. 23 jan. 2024 à 16:29
 -- Version du serveur : 8.0.31
 -- Version de PHP : 8.0.26
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `transsimclient`
+-- Base de données : `transsimcommercant`
 --
 
 -- --------------------------------------------------------
@@ -30,8 +30,7 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `autorisationtransaction`;
 CREATE TABLE IF NOT EXISTS `autorisationtransaction` (
   `numeroAutorisation` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `idCompteEmetteur` int UNSIGNED NOT NULL,
-  `idCompteAcquereur` int UNSIGNED NOT NULL,
+  `idBanqueEmetteur` int UNSIGNED NOT NULL,
   `dateAutorisation` date NOT NULL,
   `montantAutorisation` int NOT NULL,
   PRIMARY KEY (`numeroAutorisation`),

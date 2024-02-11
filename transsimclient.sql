@@ -35,7 +35,6 @@ CREATE TABLE IF NOT EXISTS `autorisationtransaction` (
   `dateAutorisation` date NOT NULL,
   `montantAutorisation` int NOT NULL,
   PRIMARY KEY (`numeroAutorisation`),
-  KEY `fk_banqueemetteur_autorisationtransaction` (`idBanqueEmetteur`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
