@@ -1,7 +1,12 @@
 import json
 import time
 
-from Server_Autorisation import genererAutorisation
+from Server_Autorisation import traiterTransaction
+from colorama import init, Fore
+
+# Initialiser colorama
+init(autoreset=True)
+chemin_fichier_json = "logs/logsTPE/logsTPE.json"
 
 def lireFichierJson(chemin_fichier):
     with open(chemin_fichier, 'r') as f:
@@ -22,12 +27,12 @@ def checkDemandesNonTraitees(demandes):
         if not demande["isTraite"]:
             traiterDemande(demande)
             demande_a_traiter = demande
-            print("Id de la demande à traiter : ", demande['idLog'])
+            print(f"{Fore.CYAN}Id de la demande à traiter : ", demande['idLog'])
             #on stocke la demande dans la variable idDemande
-            genererAutorisation(demande['idLog'])
+            traiterTransaction(demande['idLog'])
             break
     if demande_a_traiter is None:
-        print("Toutes les demandes ont déjà été traitées.")
+        # print(f"{Fore.GREEN}Toutes les demandes ont déjà été traitées.")
         return
 
     # Mettre à jour la demande traitée dans le fichier JSON
@@ -36,16 +41,9 @@ def checkDemandesNonTraitees(demandes):
     # Vérifier s'il y a d'autres demandes non traitées
     for demande in demandes:
         if not demande["isTraite"]:
-            print("Il reste d'autres demandes non traitées.")
+            print(f"{Fore.CYAN}Il reste d'autres demandes non traitées.")
             break
 
-if __name__ == "__main__":
-    chemin_fichier_json = "logs/logsTPE/logsTPE.json"
 
-    while True:
-        demandes = lireFichierJson(chemin_fichier_json)
-        checkDemandesNonTraitees(demandes)
-        # Attendre un certain temps avant de vérifier à nouveau le fichier JSON
-        time.sleep(5)  # Attendre 5 secondes avant la prochaine vérification
-        
+
         

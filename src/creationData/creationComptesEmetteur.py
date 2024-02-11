@@ -78,15 +78,15 @@ def creationIdCompteBancaire():
         
     return idCompte
 
-numCompte = creationIdCompteBancaire()
+# numCompte = creationIdCompteBancaire()
 
-#affichage du numéro de compte
-print("Le numéro de compte est : ", numCompte)
+# #affichage du numéro de compte
+# print("Le numéro de compte est : ", numCompte)
 
 
 
 # Fonction pour créer un compte en banque
-def creerCompte():
+def creerCompteEmetteur():
     nom = input("Entrez votre nom : ")
     prenom = input("Entrez votre prénom : ")
 
@@ -208,4 +208,4 @@ def creationCarte(idCompteEmetteur, idBanque):
 
 
 # creation d'un compte acquéreur
-creerCompte()
+#creerCompteEmetteur()

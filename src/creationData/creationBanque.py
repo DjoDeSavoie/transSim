@@ -30,11 +30,13 @@ def creer_banque(nomBanque):
         if conn:
             conn.close()
 
-# Demander à l'utilisateur le nom de la banque à créer
-nomBanque = input("Entrez le nom de la banque que vous souhaitez créer : ")
 
-# Appeler la fonction pour créer la banque
-creer_banque(nomBanque)
+def creationBanque():
+    # Demander à l'utilisateur le nom de la banque à créer
+    nomBanque = input("Entrez le nom de la banque que vous souhaitez créer : ")
+
+    # Appeler la fonction pour créer la banque
+    creer_banque(nomBanque)
 
 
 ###############################################################################################
@@ -42,7 +44,7 @@ creer_banque(nomBanque)
 ###############################################################################################
 
 
-# Ouvrir un fichier en mode écriture (crée un fichier s'il n'existe pas)
-with open("logs/logsTPE/fichierLogsTPE" + str(nomBanque.capitalize()) + ".json", "w") as fichier:
-    # Écrire dans le fichier
-    fichier.write("Fichier de logs de la banque " + str(nomBanque.capitalize()) + ".\n\n")
+    # Ouvrir un fichier en mode écriture (crée un fichier s'il n'existe pas)
+    with open("logs/logsTPE/fichierLogsTPE" + str(nomBanque.capitalize()) + ".json", "w") as fichier:
+        # Écrire dans le fichier
+        fichier.write("Fichier de logs de la banque " + str(nomBanque.capitalize()) + ".\n\n")

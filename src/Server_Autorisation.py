@@ -3,51 +3,60 @@
 import json
 import time
 import pymysql
+from pymysql import MySQLError
 
 from Server_NTP import getDateWithTwoYears
+from colorama import init, Fore
 
-chemin_fichier_json = "logs/logsTPE/logsTPE.json"
+# Initialiser colorama
+init(autoreset=True)
 
-#connexion à la base de données
-conn = pymysql.connect(user ='root', host='34.163.159.223', database='transsim')
-cursor = conn.cursor()
-
-def lireFichierJson(chemin_fichier):
-    with open(chemin_fichier, 'r') as f:
-        return json.load(f)
-    
-def checkInfoTransaction(demande):
-    #vérification de la validité de la demande : solde emetteur suffisant, validité de la carte, etc
-    #on vérifie que le solde de l'emetteur est suffisant
-    cursor.execute("SELECT solde FROM compte WHERE idCompte = %s", (demande['idCompteEmetteur']))
-    solde = cursor.fetchone()[0]
-    if solde < demande['montant']:
-        print("Solde insuffisant pour la transaction.")
-        return False
-    #on vérifie la validité de la carte
-    cursor.execute("SELECT dateExpiration FROM carte WHERE idCarte = %s", (demande['idCarteEmetteur']))
-    dateExpiration = cursor.fetchone()[0]
-    if dateExpiration < getDateWithTwoYears():
-        print("Carte expirée.")
+# fonction qui génère une autorisation
+def traiterTransaction(idLog):
+    db_connection = pymysql.connect(user='root', host='34.163.159.223', database='transsim')
+    # Étape 1: Récupérer les informations du log
+    try:
+        with open("logs/logsTPE/logsTPE.json", 'r') as file:
+            logs = json.load(file)
+            transaction_log = next((item for item in logs if item["idLog"] == idLog), None)
+            if not transaction_log:
+                raise ValueError(f"Aucun log trouvé avec l'idLog {idLog}.")
+    except (IOError, json.JSONDecodeError, ValueError) as e:
+        print(f"Erreur lors de la lecture du fichier de logs: {e}")
         return False
     
-def saveInfoTransacDansBase(demande):
-    #sauvegarde des informations de la transaction
-    cursor.execute("INSERT INTO transaction (idCompteEmetteur, idCompteAcquereur, montant, idCarteEmetteur, idCarteRecepteur, dateTransaction) VALUES (%s, %s, %s, %s, %s, %s)", 
-                   (demande['idCompteEmetteur'], demande['idCompteRecepteur'], demande['montant'], demande['idCarteEmetteur'], demande['idCarteRecepteur'], demande['dateTransaction']))
-    
-    
+    # Étape 2 et 3: Vérification des soldes et transfert des montants
+    try:
+        with db_connection.cursor() as cursor:
+            # Vérifier le solde du compte émetteur
+            print(f"Vérification du solde du compte émetteur {transaction_log['numero_compte_emetteur']}...")
+            cursor.execute("SELECT soldeCompteEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s",
+                           (transaction_log["numero_compte_emetteur"],))
+            solde_emetteur = cursor.fetchone()
+            if solde_emetteur is None:
+                print("Compte émetteur non trouvé.")
+                return False
+            if solde_emetteur[0] < transaction_log["montant_transaction"]:
+                print("Solde insuffisant pour la transaction.")
+                return False
 
+            # Début de la transaction
+            db_connection.begin()
 
-def genererAutorisation(idDemande):
-    #on récupère les données du fichier json
-    donnees = lireFichierJson(chemin_fichier_json)
-    
-    #tri des données : on récupère la donnée de la demande ou idLog vaut idDemande
-    demande = [demande for demande in donnees if demande['idLog'] == idDemande][0]
-    print("Données de la demande : ", demande)
-    if checkInfoTransaction(demande):
-        #sauvegarde des informations de la transaction
-        saveInfoTransacDansBase(demande)
-    print("Génération de l'autorisation pour la demande : ", idDemande)
-    
+            # Débiter le montant du compte émetteur
+            cursor.execute("UPDATE comptebancaireemetteur SET soldeCompteEmetteur = soldeCompteEmetteur - %s WHERE idCompteEmetteur = %s",
+                           (transaction_log["montant_transaction"], transaction_log["numero_compte_emetteur"]))
+
+            # Créditer le montant au compte acquéreur
+            cursor.execute("UPDATE comptebancaireacquereur SET soldeCompteAcquereur = soldeCompteAcquereur + %s WHERE idCompteAcquereur = %s",
+                           (transaction_log["montant_transaction"], transaction_log["numero_compte_acquereur"]))
+
+            # Valider la transaction
+            db_connection.commit()
+            print("La transaction a été traitée avec succès.")
+            return True
+    except MySQLError as e:
+        # En cas d'erreur, annuler la transaction
+        db_connection.rollback()
+        print(f"Erreur lors de la transaction dans la base de données: {e}")
+        return False

@@ -93,5 +93,5 @@ def creationCarte(idCompteEmetteur, idBanque):
     conn.commit()
     conn.close()
 
-#teste de la fonction de création de carte avec un id de compte et un id de banque
-creationCarte("12345678910", "1")
+# #teste de la fonction de création de carte avec un id de compte et un id de banque
+# creationCarte("12345678910", "1")

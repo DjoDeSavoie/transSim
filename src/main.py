@@ -4,12 +4,75 @@
 
 from TPE import *
 from Server_Autorisation import *
+from Server_Acquisition import *
+from creationData.creationBanque import creer_banque
+from creationData.creationComptesAcquereur import creerCompteAcquereur
+from creationData.creationComptesEmetteur import creerCompteEmetteur
+from colorama import init, Fore
+import threading
 
-#Appel de la fonction pour récupérer les informations
-# numeroCarte = GetInfosCB()
+# Initialiser colorama
+init(autoreset=True)
 
-# if numeroCarte != False:
-#     if VerifInfosTransac(numeroCarte) == True:
-#         EnvoiAutorisation(numeroCarte, 1, 300)
+# Fonction wrapper pour  Server_Acquisition.py
+def run_server_acquisition():
+    print(f"{Fore.YELLOW}Server_Acquisition.py en cours d'exécution...")
+    chemin_fichier_json = "logs/logsTPE/logsTPE.json"
 
-traiterTransaction(1)
+    while True:
+        demandes = lireFichierJson(chemin_fichier_json)
+        checkDemandesNonTraitees(demandes)
+        # Attendre un certain temps avant de vérifier à nouveau le fichier JSON
+        time.sleep(3)  # Attendre 5 secondes avant la prochaine vérification
+    
+# Fonction pour démarrer le server acquisition dans un autre thread
+def start_server_acquisition():
+    acquisition_thread = threading.Thread(target=run_server_acquisition)
+    acquisition_thread.daemon = True  # Le thread sera tué lorsque le programme principal se termine
+    acquisition_thread.start()
+
+# Fonction pour vérifier le solde
+def verifier_solde():
+    type_compte = input(f"{Fore.YELLOW}Entrez le type de votre compte ('emetteur' : 1 ou 'acquereur': 2) :")
+    id_compte = input(f"{Fore.YELLOW}Entrez l'ID de votre compte : ")
+    solde = verifieSolde(id_compte, type_compte)
+    if solde is not None:
+        print(f"{Fore.CYAN}Le solde de votre compte est de {solde}€.")
+
+# Menu principal
+def menu_principal():
+    while True:
+        time.sleep(3)
+        print(f"\n{Fore.CYAN}----- MENU PRINCIPAL -----")
+        print("1. Créer une banque")
+        print("2. Créer un compte acquéreur")
+        print("3. Créer un compte émetteur")
+        print("4. Vérifier le solde")
+        print("5. Acheter un produit")
+        print("0. Quitter")
+
+        choix = input("Entrez votre choix: ")
+
+        if choix == '1':
+            nom_banque = input("Entrez le nom de la banque: ")
+            creer_banque(nom_banque)
+        elif choix == '2':
+            creerCompteAcquereur()
+        elif choix == '3':
+            creerCompteEmetteur()
+        elif choix == '4':
+            verifier_solde()
+        elif choix == '5':
+            acheter_produit()
+        elif choix == '0':
+            print(f"{Fore.YELLOW}Programme terminé. Au revoir!")
+            break
+        else:
+            print(f"{Fore.RED}Choix invalide! Veuillez réessayer.")
+
+if __name__ == "__main__":
+    # Lancer le server acquisition dans un thread séparé
+    start_server_acquisition()
+    
+    # Lancer le menu principal
+    menu_principal()

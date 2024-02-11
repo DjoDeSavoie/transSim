@@ -78,10 +78,10 @@ def creationIdCompteBancaire():
         
     return idCompte
 
-numCompte = creationIdCompteBancaire()
+# numCompte = creationIdCompteBancaire()
 
-#affichage du numéro de compte
-print("Le numéro de compte est : ", numCompte)
+# #affichage du numéro de compte
+# print("Le numéro de compte est : ", numCompte)
 
 
 
@@ -103,7 +103,7 @@ def creerCompte():
     conn.commit()
     print("Compte créé avec succès! ... \n")
     
-creerCompte()
+#creerCompte()
     
 
     

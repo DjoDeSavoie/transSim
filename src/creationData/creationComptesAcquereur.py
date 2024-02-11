@@ -78,15 +78,15 @@ def creationIdCompteBancaire():
         
     return idCompte
 
-numCompte = creationIdCompteBancaire()
+# numCompte = creationIdCompteBancaire()
 
-#affichage du numéro de compte
-print("Le numéro de compte est : ", numCompte)
+# #affichage du numéro de compte
+# print("Le numéro de compte est : ", numCompte)
 
 
 
 # Fonction pour créer un compte en banque
-def creerCompte():
+def creerCompteAcquereur():
     nom = input("Entrez votre nom : ")
     prenom = input("Entrez votre prénom : ")
 
@@ -101,18 +101,8 @@ def creerCompte():
     # Exécutez la requête SQL pour créer un compte
     cursor.execute("INSERT INTO comptebancaireacquereur (idCompteAcquereur, idBanqueAcquereur, nom, prenom, soldeCompteAcquereur) VALUES (%s, %s, %s, %s, %s)", (idCompteAcquereur, idBanque, nom, prenom, solde))
     conn.commit()
-<<<<<<< Updated upstream
-    print("Compte créé avec succès! ... \n")
-    
-        
-
-
-# creation d'un compte acquéreur
-creerCompte()
-=======
     print("Compte créé avec succès! ... \n Création du TPE associée au compte ... \n")
     
 
 #la table tpe contiendra l'ensemble des transaction effectuées par l'acquéreur propriétaire du TPE
 #l'id du tpe permet d'identifier de manière unique le tpe et de connaitre l'acquéreur propriétaires du TPE
->>>>>>> Stashed changes
