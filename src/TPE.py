@@ -9,6 +9,21 @@ import json
 import os
 import getpass
 import pymysql
+import hashlib
+
+
+def hash_sha256(data):
+    # Créer un objet hash SHA-256
+    sha256_hash = hashlib.sha256()
+
+    # Mettre à jour l'objet hash avec les données à hasher (doit être des bytes)
+    sha256_hash.update(data.encode('utf-8'))
+
+    # Obtenir la représentation hexadécimale du hash
+    hashed_data = sha256_hash.hexdigest()
+
+    return hashed_data
+
 
 # Initialiser colorama
 init(autoreset=True)
@@ -22,6 +37,7 @@ def GetInfosCB():
     db_connection = pymysql.connect(user='root', host='34.163.159.223', database='transsim')
     print(f"{Fore.CYAN}Entrez votre numéro de carte bancaire :")
     numeroCarte = input()
+    numeroCarte = hash_sha256(numeroCarte)
     # Vérification de l'existence de la carte bancaire
     if verifSiExisteCB(numeroCarte, db_connection) == False:
         print(f"{Fore.RED}Votre numéro de carte n'existe pas")
@@ -37,7 +53,6 @@ def VerifInfosTransac(numeroCarte):
     # Vérification de la validité de la carte bancaire
     print(f"{Fore.CYAN}Entrez la date d'expiration de votre carte (MM/AA) : ")
     date_exp_utilisateur = input()
-
     infosCB = recupere_infos_cb(numeroCarte, db_connection)
 
     # Si la date d'expiration est incorrecte ou la carte est expirée
@@ -49,8 +64,7 @@ def VerifInfosTransac(numeroCarte):
     tentatives = 0
     while tentatives < 3:
         pin = getpass.getpass(f"{Fore.CYAN}Veuillez entrer votre code PIN : ")
-        pin = int(pin)
-        
+        pin = hash_sha256(str(pin))
         if verifPin(infosCB, pin, db_connection):
             print(f"{Fore.GREEN}Vérification réussie.")
             return True
@@ -64,13 +78,13 @@ def VerifInfosTransac(numeroCarte):
 def verifSiExisteCB(numeroCarte, db_connection):
     # Vérifie si le numéro de carte existe dans la base de données
     with db_connection.cursor() as cursor:
-        cursor.execute("SELECT COUNT(*) FROM cartebancaire WHERE numeroCarte = %s", (numeroCarte,))
+        cursor.execute("SELECT COUNT(*) FROM cartebancaire WHERE numeroCarte = %s", (numeroCarte))
         (count,) = cursor.fetchone()
         return count > 0
 
 def recupere_infos_cb(numeroCarte, db_connection):
     with db_connection.cursor() as cursor:
-        cursor.execute("SELECT numeroCarte, idCompteEmetteur, dateExpiration, validite, pin, cryptogramme FROM cartebancaire WHERE numeroCarte = %s", (numeroCarte,))
+        cursor.execute("SELECT numeroCarte, idCompteEmetteur, dateExpiration, validite, pin, cryptogramme FROM cartebancaire WHERE numeroCarte = %s", (numeroCarte))
         return cursor.fetchone()
 
 def verifPin(infos_cb, pin_saisi, db_connection):
@@ -89,13 +103,13 @@ def verifPin(infos_cb, pin_saisi, db_connection):
 def bloqueCarte(numeroCarte, db_connection):
     with db_connection.cursor() as cursor:
         update_query = "UPDATE cartebancaire SET validite = 0 WHERE numeroCarte = %s;"
-        cursor.execute(update_query, (numeroCarte,))
+        cursor.execute(update_query, (hash_sha256(numeroCarte)))
         db_connection.commit()
 
 def DebloqueCarte(numeroCarte, db_connection):
     with db_connection.cursor() as cursor:
         update_query = "UPDATE cartebancaire SET validite = 1 WHERE numeroCarte = %s;"
-        cursor.execute(update_query, (numeroCarte,))
+        cursor.execute(update_query, (hash_sha256(numeroCarte)))
         db_connection.commit()
 
 
@@ -138,7 +152,7 @@ def acheter_produit():
     # Ajouter le nom du fournisseur aux produits
     for produit in produits:
         # Sélection aléatoire d'un fournisseur pour l'exemple
-        fournisseur = fournisseurs[0]  # Vous pouvez rendre cette sélection plus intelligente
+        fournisseur = fournisseurs[0]
         produit['fournisseur'] = f"{fournisseur[1]} {fournisseur[2]}"
 
     # Afficher les produits avec les noms des fournisseurs
@@ -161,9 +175,9 @@ def verifieSolde(id_compte, type_compte):
     try:
         with db_connection.cursor() as cursor:
             if type_compte == '1':
-                cursor.execute("SELECT soldeCompteEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s", (id_compte,))
+                cursor.execute("SELECT soldeCompteEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s", (hash_sha256(id_compte)))
             elif type_compte == '2':
-                cursor.execute("SELECT soldeCompteAcquereur FROM comptebancaireacquereur WHERE idCompteAcquereur = %s", (id_compte,))
+                cursor.execute("SELECT soldeCompteAcquereur FROM comptebancaireacquereur WHERE idCompteAcquereur = %s", (hash_sha256(id_compte)))
             else:
                 print(f"{Fore.RED}Type de compte non valide.")
                 return None
@@ -199,7 +213,7 @@ def get_next_id(file_path='logs/logsTPE/logsTPE.json'):
 # Fonction pour envoyer une autorisation au serveur d'acquisition
 def EnvoiAutorisation(idComteEmetteur, idCompteAcquereur, montant):
     cheminFichier = "logs/logsTPE/logsTPE.json"
-    
+
     # Vérifier si le fichier existe
     if not os.path.exists(cheminFichier):
         raise FileNotFoundError(f"{Fore.RED}Le fichier {cheminFichier} n'existe pas.")
@@ -241,6 +255,8 @@ def convertCardtoID(numeroCarte):
     cursor = db_connection.cursor()
     cursor.execute("SELECT idCompteEmetteur FROM cartebancaire WHERE numeroCarte = %s", (numeroCarte,))
     idCompteEmetteur = cursor.fetchone()
+    print("titktitkti")
+    print(idCompteEmetteur)
     return idCompteEmetteur
 
 def initTransac(idAq, montant):

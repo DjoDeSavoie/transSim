@@ -3,10 +3,14 @@
 import pymysql
 import random
 from datetime import datetime
-
+from colorama import init, Fore
+import hashlib
 
 #importe le serveur NTP pour la fonction de récupération de la date actuelle + 2 ans 
 from Server_NTP import getDateWithTwoYears
+
+# Initialiser colorama
+init(autoreset=True)
 
 #Connexion à la base de données
 conn = pymysql.connect(user ='root', host='34.163.159.223', database='transsim')
@@ -66,14 +70,14 @@ def creationIdCompteBancaire():
     idCompte = random11number()
     
     #on vérifie que l'id n'existe pas déjà 
-    cursor.execute("SELECT idCompteEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s", (idCompte))
+    cursor.execute("SELECT idCompteEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s", (hash_sha256(idCompte)))
     idCompteExiste = cursor.fetchone()
     
     #si l'id existe déjà ou qu'il est de longuer différente de 11, on en génère un nouveau
 
     while idCompteExiste != None or len(idCompte) != 11:
         idCompte = random11number()
-        cursor.execute("SELECT idCompteEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s", (idCompte))
+        cursor.execute("SELECT idCompteEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s", (hash_sha256(idCompte)))
         idCompteExiste = cursor.fetchone()
         
     return idCompte
@@ -95,13 +99,15 @@ def creerCompteEmetteur():
     choixBanque = choisirBanque(nomsBanques)
     idBanque = recupererIdBanqueChoisie(choixBanque)
     idCompteEmetteur = creationIdCompteBancaire()
-    solde = 0
+    solde = 500
     
     
     # Exécutez la requête SQL pour créer un compte
-    cursor.execute("INSERT INTO comptebancaireemetteur (idCompteEmetteur, idBanqueEmetteur, nom, prenom, soldeCompteEmetteur) VALUES (%s, %s, %s, %s, %s)", (idCompteEmetteur, idBanque, nom, prenom, solde))
+    cursor.execute("INSERT INTO comptebancaireemetteur (idCompteEmetteur, idBanqueEmetteur, nom, prenom, soldeCompteEmetteur) VALUES (%s, %s, %s, %s, %s)", (hash_sha256(idCompteEmetteur), idBanque, nom, prenom, solde))
     conn.commit()
-    print("Compte créé avec succès! ... \n Création de la carte associée au compte ... \n")
+    print(f"{Fore.GREEN} Compte créé avec succès! ... \n Création de la carte associée au compte ... \n")
+    print(f"{Fore.RED} Voici vos informations, veuillez les enregistrer ! \n")
+    print("Le numéro de compte est : ", Fore.GREEN +  idCompteEmetteur)
     
     
     #CREATION DE LA CARTE ASSOCIEE AU COMPTE
@@ -114,7 +120,17 @@ def creerCompteEmetteur():
 ################################### CREATION D'UNE CARTE ######################################
 ###############################################################################################
 
+def hash_sha256(data):
+    # Créer un objet hash SHA-256
+    sha256_hash = hashlib.sha256()
 
+    # Mettre à jour l'objet hash avec les données à hasher (doit être des bytes)
+    sha256_hash.update(data.encode('utf-8'))
+
+    # Obtenir la représentation hexadécimale du hash
+    hashed_data = sha256_hash.hexdigest()
+
+    return hashed_data
 
 
 #creation d'un tableau associant les id d'une banque aux 3 premiers chiffres de sa carte
@@ -196,12 +212,16 @@ def creationCarte(idCompteEmetteur, idBanque):
     
     #on fait la requete sql permettant d'insérer les valeurs dans la base de données
     cursor.execute("INSERT INTO cartebancaire (numeroCarte, idCompteEmetteur, dateExpiration, validite, pin, cryptogramme) VALUES (%s, %s, %s, %s, %s, %s)",
-                   (numeroCarte, idCompteEmetteur, dateValidite, 1, pin, crypto))
+                   (hash_sha256(numeroCarte), hash_sha256(idCompteEmetteur), dateValidite, 1, hash_sha256(pin), hash_sha256(crypto)))
     
     conn.commit()
     conn.close()
     
     print("Carte créée avec succès! \n")
+    #colorier en vert le numéro de carte
+    print("Le numéro de carte est : ", Fore.GREEN + numeroCarte)
+    print("La date d'expiration de la carte est : ", Fore.GREEN + dateValidite)
+    print("Le code pin de la carte est : ", Fore.GREEN + pin)
     
     
     

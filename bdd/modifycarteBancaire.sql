@@ -1,1 +1,0 @@
-ALTER TABLE cartebancaire MODIFY COLUMN numeroCarte DOUBLE NOT NULL COMMENT 'numéro de carte, les 4 premiers chiffres identifient la banque, le dernier est la clé de Luhn calculée d''après les chiffres précédents'

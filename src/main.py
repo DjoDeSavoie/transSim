@@ -16,7 +16,7 @@ init(autoreset=True)
 
 # Fonction wrapper pour  Server_Acquisition.py
 def run_server_acquisition():
-    print(f"{Fore.YELLOW}Server_Acquisition.py en cours d'exécution...")
+    print(f"{Fore.YELLOW}Serveur d'acquisition en cours d'exécution...")
     chemin_fichier_json = "logs/logsTPE/logsTPE.json"
 
     while True:

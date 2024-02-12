@@ -2,24 +2,6 @@
 
 
 
--- Delete all the values from cartebancaire
--- DELETE FROM comptebancaireemetteur; 
-
---DELETE FROM comptebancaireacquereur;
-
--- CHANGE THE VALUE OF THE CRYPTOGRAMME
--- UPDATE cartebancaire
--- SET cryptogramme = '263'
--- WHERE numeroCarte = '4972143877517948';
-
--- ALTER TABLE tpe
--- DROP PRIMARY KEY,
--- ADD PRIMARY KEY (idTpe);
-
-
-
-
-
 
 
 
@@ -96,12 +78,12 @@ INSERT INTO `banque` (`idBanque`, `nomBanque`) VALUES
 
 DROP TABLE IF EXISTS `cartebancaire`;
 CREATE TABLE IF NOT EXISTS `cartebancaire` (
-  `numeroCarte` bigint NOT NULL COMMENT 'numéro de carte, les 4 premier chiffres identifient la banque, le dernier est la clé de luhn calculée d''après les chiffres précédents',
-  `idCompteEmetteur` bigint UNSIGNED NOT NULL,
+  `numeroCarte` VARCHAR(255) NOT NULL COMMENT 'numéro de carte, les 4 premier chiffres identifient la banque, le dernier est la clé de luhn calculée d''après les chiffres précédents',
+  `idCompteEmetteur` VARCHAR(255) NOT NULL,
   `dateExpiration` date NOT NULL,
   `validite` tinyint(1) NOT NULL,
-  `pin` int NOT NULL,
-  `cryptogramme` int NOT NULL,
+  `pin` VARCHAR(255) NOT NULL,
+  `cryptogramme` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`numeroCarte`),
   KEY `fk_comptebancaireemetteur_cartebancaire` (`idCompteEmetteur`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -131,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `comptebancaireacquereur` (
 
 DROP TABLE IF EXISTS `comptebancaireemetteur`;
 CREATE TABLE IF NOT EXISTS `comptebancaireemetteur` (
-  `idCompteEmetteur` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'numéro d''identifiant du compte bancaire de l''émetteur (client)',
+  `idCompteEmetteur` VARCHAR(255) NOT NULL COMMENT 'numéro d''identifiant du compte bancaire de l''émetteur (client)',
   `idBanqueEmetteur` int UNSIGNED NOT NULL,
   `nom` varchar(128) NOT NULL,
   `prenom` varchar(128) NOT NULL,
@@ -148,11 +130,7 @@ CREATE TABLE IF NOT EXISTS `comptebancaireemetteur` (
 
 DROP TABLE IF EXISTS `tpe`;
 CREATE TABLE IF NOT EXISTS `tpe` (
-<<<<<<< Updated upstream
-  `idTpe` bigint UNSIGNED NOT NULL,
-=======
-    `idTpe` BIGINT UNSIGNED NOT NULL,
->>>>>>> Stashed changes
+  `idTpe` BIGINT UNSIGNED NOT NULL,
   `numeroTransaction` int UNSIGNED NOT NULL,
   `idBanqueAcquereur` int UNSIGNED NOT NULL,
   `numeroAutorisation` int UNSIGNED NOT NULL,

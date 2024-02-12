@@ -53,5 +53,54 @@
         "montant_transaction": 20.0,
         "date_heure_transaction": "11/02/2024 15:49:21",
         "isTraite": true
+    },
+    {
+        "idLog": 6,
+        "idTPE": 1,
+        "numero_compte_emetteur": [
+            37900165513
+        ],
+        "numero_compte_acquereur": 12915644544,
+        "montant_transaction": 20.0,
+        "date_heure_transaction": "12/02/2024 20:57:43",
+        "isTraite": true
+    },
+    {
+        "idLog": 7,
+        "idTPE": 1,
+        "numero_compte_emetteur": null,
+        "numero_compte_acquereur": 47264272148,
+        "montant_transaction": 20.0,
+        "date_heure_transaction": "12/02/2024 21:45:05",
+        "isTraite": true
+    },
+    {
+        "idLog": 8,
+        "idTPE": 1,
+        "numero_compte_emetteur": null,
+        "numero_compte_acquereur": 47264272148,
+        "montant_transaction": 20.0,
+        "date_heure_transaction": "12/02/2024 21:47:12",
+        "isTraite": true
+    },
+    {
+        "idLog": 9,
+        "idTPE": 1,
+        "numero_compte_emetteur": null,
+        "numero_compte_acquereur": 47264272148,
+        "montant_transaction": 20.0,
+        "date_heure_transaction": "12/02/2024 21:53:47",
+        "isTraite": true
+    },
+    {
+        "idLog": 10,
+        "idTPE": 1,
+        "numero_compte_emetteur": [
+            "c11e1c954f3542037896b9f68b97ca01a9895e8fd693c3af0d357b30c6e85318"
+        ],
+        "numero_compte_acquereur": 47264272148,
+        "montant_transaction": 20.0,
+        "date_heure_transaction": "12/02/2024 21:54:35",
+        "isTraite": true
     }
 ]
