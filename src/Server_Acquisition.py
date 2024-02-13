@@ -5,18 +5,14 @@ from Server_Autorisation import traiterTransaction
 from Server_Interbancaire import routageTransaction
 from colorama import init, Fore
 
+from utilz import lireFichierJson, ecrireFichierJson
+
 # Initialiser colorama
 init(autoreset=True)
 
 dossier_logs = "logs/logsTPE/"
 
-def lireFichierJson(chemin_fichier):
-    with open(chemin_fichier, 'r') as f:
-        return json.load(f)
 
-def ecrireFichierJson(chemin_fichier, contenu):
-    with open(chemin_fichier, 'w') as f:
-        json.dump(contenu, f, indent=4)
 
 def traiterDemande(demande, chemin_fichier):
     if not demande["isTraite"]:
@@ -34,8 +30,6 @@ def traiterDemande(demande, chemin_fichier):
         #sinon -> on appelle le serveur interbancaire
         else: 
             routageTransaction(demande)
-            
-            return
             # Si idTPE et idBanqueEmetteur sont différents
             #on appel la fonction du serv inter bancaire avec en paramètre les données de la transac
             

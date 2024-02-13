@@ -1,5 +1,6 @@
 ############################################    Utilz    ############################################
-
+import json
+import pymysql
 
 
 ######### Fonction de hachage SHA-256 #########
@@ -26,5 +27,20 @@ def verifier_solde():
     if solde is not None:
         print(f"{Fore.CYAN}Le solde de votre compte est de {solde}€.")
 
+######### Connexion à la base de données #########
+
+conn = pymysql.connect(user ='root', host='34.163.159.223', database='transsim')
+cursor = conn.cursor()
 
 
+
+
+######### Fonctions pour lire et écrire des fichiers JSON #########
+
+def lireFichierJson(chemin_fichier):
+    with open(chemin_fichier, 'r') as f:
+        return json.load(f)
+
+def ecrireFichierJson(chemin_fichier, contenu):
+    with open(chemin_fichier, 'w') as f:
+        json.dump(contenu, f, indent=4)
