@@ -4,7 +4,7 @@ import pymysql
 import random
 from datetime import datetime
 from colorama import init, Fore
-import hashlib
+from utilz import hash_sha256
 
 #importe le serveur NTP pour la fonction de récupération de la date actuelle + 2 ans 
 from Server_NTP import getDateWithTwoYears
@@ -120,17 +120,6 @@ def creerCompteEmetteur():
 ################################### CREATION D'UNE CARTE ######################################
 ###############################################################################################
 
-def hash_sha256(data):
-    # Créer un objet hash SHA-256
-    sha256_hash = hashlib.sha256()
-
-    # Mettre à jour l'objet hash avec les données à hasher (doit être des bytes)
-    sha256_hash.update(data.encode('utf-8'))
-
-    # Obtenir la représentation hexadécimale du hash
-    hashed_data = sha256_hash.hexdigest()
-
-    return hashed_data
 
 
 #creation d'un tableau associant les id d'une banque aux 3 premiers chiffres de sa carte

@@ -5,7 +5,8 @@
 from TPE import *
 from Server_Autorisation import *
 from Server_Acquisition import *
-from creationData.creationBanque import creer_banque
+from creationData.creationBanque import creationBanque
+from utilz import verifier_solde
 from creationData.creationComptesAcquereur import creerCompteAcquereur
 from creationData.creationComptesEmetteur import creerCompteEmetteur
 from colorama import init, Fore
@@ -31,14 +32,6 @@ def start_server_acquisition(dossier_logs):
     acquisition_thread.daemon = True  # Le thread sera tué lorsque le programme principal se termine
     acquisition_thread.start()
 
-# Fonction pour vérifier le solde
-def verifier_solde():
-    type_compte = input(f"{Fore.YELLOW}Entrez le type de votre compte ('emetteur' : 1 ou 'acquereur': 2) :")
-    id_compte = input(f"{Fore.YELLOW}Entrez l'ID de votre compte : ")
-    solde = verifieSolde(id_compte, type_compte)
-    if solde is not None:
-        print(f"{Fore.CYAN}Le solde de votre compte est de {solde}€.")
-
 # Menu principal
 def menu_principal():
     while True:
@@ -54,8 +47,7 @@ def menu_principal():
         choix = input("Entrez votre choix: ")
 
         if choix == '1':
-            nom_banque = input("Entrez le nom de la banque: ")
-            creer_banque(nom_banque)
+            creationBanque()
         elif choix == '2':
             creerCompteAcquereur()
         elif choix == '3':

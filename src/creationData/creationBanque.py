@@ -3,7 +3,7 @@ import pymysql
 from Server_NTP import getDateWithTwoYears
 
 
-def creer_banque(nomBanque):
+def creerBanque(nomBanque):
     try:
         # Connexion à la base de données
         conn = pymysql.connect(user='root', host='34.163.159.223', database='transsim')
@@ -36,7 +36,7 @@ def creationBanque():
     nomBanque = input("Entrez le nom de la banque que vous souhaitez créer : ")
 
     # Appeler la fonction pour créer la banque
-    creer_banque(nomBanque)
+    creerBanque(nomBanque)
 
 
 ###############################################################################################

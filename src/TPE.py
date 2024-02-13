@@ -4,26 +4,16 @@ from getpass4 import getpass
 from Server_NTP import getTime
 from datetime import datetime
 from colorama import init, Fore
+from utilz import hash_sha256
 
 import json
 import os
 import getpass
 import pymysql
 import random
-import hashlib
 
 
-def hash_sha256(data):
-    # Créer un objet hash SHA-256
-    sha256_hash = hashlib.sha256()
 
-    # Mettre à jour l'objet hash avec les données à hasher (doit être des bytes)
-    sha256_hash.update(data.encode('utf-8'))
-
-    # Obtenir la représentation hexadécimale du hash
-    hashed_data = sha256_hash.hexdigest()
-
-    return hashed_data
 
 
 # Initialiser colorama
@@ -200,7 +190,7 @@ def verifieSolde(id_compte, type_compte):
         print(f"{Fore.RED}Erreur lors de la connexion à la base de données: {e}")
         return None
 
-############################################################ PARTIE ENVOI AUTOR ################################################################
+############################################################ PARTIE ENVOI TRANS ################################################################
 
 # Fonction pour obtenir le prochain ID
 def get_next_id(donneesExistantes):
