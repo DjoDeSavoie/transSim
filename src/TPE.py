@@ -169,7 +169,7 @@ def acheter_produit():
     initTransac(idCompteAcquereur, produit_selectionne['montant'])
 
 
-def verifieSolde(id_compte, type_compte):
+def getSolde(id_compte, type_compte):
     try:
         with db_connection.cursor() as cursor:
             if type_compte == '1':
