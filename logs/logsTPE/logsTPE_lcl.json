@@ -1,0 +1,16 @@
+[
+    {
+        "idLog": 1,
+        "idTPE": 3,
+        "idBanqueEmetteur": [
+            3
+        ],
+        "numero_compte_emetteur": [
+            "1ed2a795cee51a5babb865f51029541f0650e32978635a0fc41b8a269699f952"
+        ],
+        "numero_compte_acquereur": 70177610538,
+        "montant_transaction": 10.0,
+        "date_heure_transaction": "13/02/2024 11:10:19",
+        "isTraite": false
+    }
+]

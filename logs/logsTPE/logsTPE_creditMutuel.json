@@ -1,0 +1,30 @@
+[
+    {
+        "idLog": 1,
+        "idTPE": 1,
+        "idBanqueEmetteur": [
+            3
+        ],
+        "numero_compte_emetteur": [
+            "1ed2a795cee51a5babb865f51029541f0650e32978635a0fc41b8a269699f952"
+        ],
+        "numero_compte_acquereur": 65700695082,
+        "montant_transaction": 20.0,
+        "date_heure_transaction": "13/02/2024 10:57:30",
+        "isTraite": false
+    },
+    {
+        "idLog": 2,
+        "idTPE": 1,
+        "idBanqueEmetteur": [
+            4
+        ],
+        "numero_compte_emetteur": [
+            "2a987ef648a7791679ef4a1451f429512dd68ea6298cb2429e663c7e79f7fed9"
+        ],
+        "numero_compte_acquereur": 65700695082,
+        "montant_transaction": 15.0,
+        "date_heure_transaction": "13/02/2024 10:59:07",
+        "isTraite": false
+    }
+]

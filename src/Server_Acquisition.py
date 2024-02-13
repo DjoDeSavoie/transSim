@@ -1,12 +1,13 @@
 import json
 import time
-
+import os
 from Server_Autorisation import traiterTransaction
 from colorama import init, Fore
 
 # Initialiser colorama
 init(autoreset=True)
-chemin_fichier_json = "logs/logsTPE/logsTPE.json"
+
+dossier_logs = "logs/logsTPE/"
 
 def lireFichierJson(chemin_fichier):
     with open(chemin_fichier, 'r') as f:
@@ -18,32 +19,28 @@ def ecrireFichierJson(chemin_fichier, contenu):
 
 def traiterDemande(demande):
     if not demande["isTraite"]:
-        print("Traitement de la demande : ", demande['idLog'])
-        demande["isTraite"] = True
-
-def checkDemandesNonTraitees(demandes):
-    demande_a_traiter = None
-    for demande in demandes:
-        if not demande["isTraite"]:
-            traiterDemande(demande)
-            demande_a_traiter = demande
-            print(f"{Fore.CYAN}Id de la demande à traiter : ", demande['idLog'])
-            #on stocke la demande dans la variable idDemande
-            traiterTransaction(demande['idLog'])
-            break
-    if demande_a_traiter is None:
-        # print(f"{Fore.GREEN}Toutes les demandes ont déjà été traitées.")
-        return
-
-    # Mettre à jour la demande traitée dans le fichier JSON
-    ecrireFichierJson(chemin_fichier_json, demandes)
-
-    # Vérifier s'il y a d'autres demandes non traitées
-    for demande in demandes:
-        if not demande["isTraite"]:
-            print(f"{Fore.CYAN}Il reste d'autres demandes non traitées.")
-            break
-
-
-
+        # Convertir les valeurs en listes en une seule valeur si nécessaire
+        idTPE = demande["idTPE"]
+        idBanqueEmetteur = demande["idBanqueEmetteur"][0] if isinstance(demande["idBanqueEmetteur"], list) else demande["idBanqueEmetteur"]
         
+        if idTPE == idBanqueEmetteur:
+            print(f"{Fore.CYAN}Traitement de la demande : {demande['idLog']}")
+            demande["isTraite"] = True
+            # Traitement de la transaction si idTPE et idBanqueEmetteur sont les mêmes
+            traiterTransaction(demande['idLog'])
+        else:
+            print(f"{Fore.YELLOW}La demande {demande['idLog']} ne correspond pas à la banque émetteur.")
+
+def checkDemandesNonTraitees(chemin_fichier):
+    demandes = lireFichierJson(chemin_fichier)
+    for demande in demandes:
+        traiterDemande(demande)
+    ecrireFichierJson(chemin_fichier, demandes)
+
+def parcourirFichiersLogs(dossier):
+    # Liste tous les fichiers dans le dossier logsTPE
+    for filename in os.listdir(dossier):
+        if filename.endswith(".json"):
+            chemin_fichier = os.path.join(dossier, filename)
+            checkDemandesNonTraitees(chemin_fichier)
+

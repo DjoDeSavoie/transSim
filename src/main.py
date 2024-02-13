@@ -14,16 +14,16 @@ import threading
 # Initialiser colorama
 init(autoreset=True)
 
-# Fonction wrapper pour  Server_Acquisition.py
-def run_server_acquisition():
+# Fonction wrapper pour Server_Acquisition.py
+dossier_logs = "logs/logsTPE/"
+def run_server_acquisition(dossier_logs):
     print(f"{Fore.YELLOW}Serveur d'acquisition en cours d'exécution...")
-    chemin_fichier_json = "logs/logsTPE/logsTPE.json"
 
     while True:
-        demandes = lireFichierJson(chemin_fichier_json)
-        checkDemandesNonTraitees(demandes)
-        # Attendre un certain temps avant de vérifier à nouveau le fichier JSON
-        time.sleep(3)  # Attendre 5 secondes avant la prochaine vérification
+        parcourirFichiersLogs(dossier_logs)
+        # Attendre un certain temps avant de vérifier à nouveau les fichiers JSON
+        time.sleep(3)  # Attendre 3 secondes avant la prochaine vérification
+
     
 # Fonction pour démarrer le server acquisition dans un autre thread
 def start_server_acquisition():

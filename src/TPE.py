@@ -9,6 +9,7 @@ import json
 import os
 import getpass
 import pymysql
+import random
 import hashlib
 
 
@@ -144,28 +145,35 @@ def acheter_produit():
 
     # Créer une liste de produits fictifs avec des montants
     produits = [
-        {"nom": f"{Fore.GREEN}Ballon de football", "montant": 20.0, "fournisseur": ""},
-        {"nom": f"{Fore.GREEN}T-shirt de sport", "montant": 15.0, "fournisseur": ""},
-        {"nom": f"{Fore.GREEN}Raquette de tennis", "montant": 45.0, "fournisseur": ""}
-    ]
+    {"nom": "Ballon de football", "montant": 20.0},
+    {"nom": "T-shirt de sport", "montant": 15.0},
+    {"nom": "Raquette de tennis", "montant": 45.0},
+    {"nom": "Chaussures de running", "montant": 50.0},
+    {"nom": "Sac de sport", "montant": 25.0},
+    {"nom": "Montre de fitness", "montant": 70.0},
+    {"nom": "Bandes de résistance", "montant": 30.0},
+    {"nom": "Gourde", "montant": 10.0},
+    {"nom": "Casquette", "montant": 12.0},
+    {"nom": "Serviette de sport", "montant": 7.5}
+]
 
-    # Ajouter le nom du fournisseur aux produits
+    # Ajouter le nom du fournisseur aux produits de manière aléatoire
     for produit in produits:
-        # Sélection aléatoire d'un fournisseur pour l'exemple
-        fournisseur = fournisseurs[0]
+        fournisseur = random.choice(fournisseurs)  # Choix aléatoire d'un fournisseur
         produit['fournisseur'] = f"{fournisseur[1]} {fournisseur[2]}"
+        produit['idCompteAcquereur'] = fournisseur[0]  # Ajouter l'ID du fournisseur
 
     # Afficher les produits avec les noms des fournisseurs
     print(f"{Fore.CYAN}Liste des produits disponibles :")
     for idx, produit in enumerate(produits, 1):
-        print(f"{idx}. {produit['nom']} - {produit['montant']}€ - Fourni par {produit['fournisseur']}")
+        print(f"{Fore.GREEN}{idx}. {produit['nom']} - {produit['montant']}€ - Fourni par {Fore.WHITE}{produit['fournisseur']}{Fore.GREEN}")
 
     # Demander à l'utilisateur de choisir un produit
     choix_produit = int(input(f"{Fore.CYAN}Sélectionnez le numéro du produit que vous souhaitez acheter : "))
     produit_selectionne = produits[choix_produit - 1]
 
-    # Récupérer l'idCompteAcquereur du fournisseur sélectionné
-    idCompteAcquereur = fournisseurs[0][0]  # Même sélection que pour le produit
+    # Utiliser l'idCompteAcquereur du fournisseur sélectionné pour le produit
+    idCompteAcquereur = produit_selectionne['idCompteAcquereur']
 
     # Appeler initTransac avec l'idCompteAcquereur et le montant du produit
     initTransac(idCompteAcquereur, produit_selectionne['montant'])
@@ -195,68 +203,73 @@ def verifieSolde(id_compte, type_compte):
 ############################################################ PARTIE ENVOI AUTOR ################################################################
 
 # Fonction pour obtenir le prochain ID
-def get_next_id(file_path='logs/logsTPE/logsTPE.json'):
+def get_next_id(donneesExistantes):
+    # Cette fonction devrait générer le prochain ID de log basé sur les données existantes
+    # Par exemple, en prenant l'ID le plus élevé et en ajoutant 1
+    if donneesExistantes:
+        return max(demande["idLog"] for demande in donneesExistantes) + 1
+    else:
+        return 1
+
+def EnvoiAutorisation(idCompteEmetteur, idCompteAcquereur, montant):
     try:
-        with open(file_path, 'r') as file:
-            data = json.load(file)
-            # Trouver le plus grand idLog existant
-            existing_ids = [entry['idLog'] for entry in data]
-            if not existing_ids:
-                next_id = 1
-            else : 
-                next_id = max(existing_ids) + 1
-    except (FileNotFoundError, json.JSONDecodeError):
-        next_id = 1
+        with db_connection.cursor() as cursor:
+            # Récupérer l'ID de la banque acquéreur
+            cursor.execute("SELECT idBanqueAcquereur FROM comptebancaireacquereur WHERE idCompteAcquereur = %s", (idCompteAcquereur,))
+            idBanqueAcquereur = cursor.fetchone()[0]
 
-    return next_id
+            # Récupérer le nom de la banque acquéreur
+            cursor.execute("SELECT nomBanque FROM banque WHERE idBanque = %s", (idBanqueAcquereur,))
+            nomBanque = cursor.fetchone()[0]
 
-# Fonction pour envoyer une autorisation au serveur d'acquisition
-def EnvoiAutorisation(idComteEmetteur, idCompteAcquereur, montant):
-    cheminFichier = "logs/logsTPE/logsTPE.json"
+            # Définir le chemin du fichier de logs basé sur le nom de la banque
+            nomFichierLogs = f"logs/logsTPE/logsTPE_{nomBanque}.json"
 
-    # Vérifier si le fichier existe
-    if not os.path.exists(cheminFichier):
-        raise FileNotFoundError(f"{Fore.RED}Le fichier {cheminFichier} n'existe pas.")
-
-    # Charger les données existantes ou initialiser avec une liste vide si le fichier est vide
-    try:
-        with open(cheminFichier, "r", encoding='utf-8') as fichier:
-            try:
-                donneesExistantes = json.load(fichier)
-            except json.JSONDecodeError:
-                # Initialiser avec une liste vide si le fichier est vide
+            # Vérifier si le fichier de logs existe déjà pour cette banque
+            if not os.path.exists(nomFichierLogs):
+                # S'il n'existe pas, initialisez une liste vide
                 donneesExistantes = []
-    except IOError as e:
-        print(f"{Fore.RED}Une erreur est survenue lors de la lecture du fichier: {e}")
-        raise
+            else:
+                # S'il existe, chargez son contenu
+                with open(nomFichierLogs, 'r', encoding='utf-8') as fichier:
+                    donneesExistantes = json.load(fichier)
 
-    # Obtenez le prochain ID
-    next_id = get_next_id()
+            # Obtenez le prochain ID de log
+            next_id = get_next_id(donneesExistantes)
 
-    # Ajouter la nouvelle ligne avec les informations
-    nouvelleLigne = {
-        "idLog" : next_id,
-        "idTPE" : 1,
-        "numero_compte_emetteur": idComteEmetteur,
-        "numero_compte_acquereur": idCompteAcquereur,
-        "montant_transaction": montant,
-        "date_heure_transaction": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-        "isTraite": False
-    }
-    donneesExistantes.append(nouvelleLigne)
+            cursor = db_connection.cursor()
+            cursor.execute("SELECT idBanqueEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s", (idCompteEmetteur))
+            idBanqueEmetteur = cursor.fetchone()
 
-    # Sauvegarder dans le fichier JSON
-    with open(cheminFichier, "w", encoding='utf-8') as fichier:
-        json.dump(donneesExistantes, fichier, indent=2)
+            # Créer la nouvelle ligne pour le log
+            nouvelleLigne = {
+                "idLog": next_id,
+                "idTPE": idBanqueAcquereur,  # Utiliser l'ID de la banque acquéreur
+                "idBanqueEmetteur": idBanqueEmetteur,
+                "numero_compte_emetteur": idCompteEmetteur,
+                "numero_compte_acquereur": idCompteAcquereur,
+                "montant_transaction": montant,
+                "date_heure_transaction": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+                "isTraite": False
+            }
 
-    print(f"{Fore.GREEN}Transaction enregistrée dans le fichier de logs.")
-    
+            # Ajouter la nouvelle ligne aux données existantes
+            donneesExistantes.append(nouvelleLigne)
+
+            # Sauvegarder les données mises à jour dans le fichier de logs
+            with open(nomFichierLogs, 'w', encoding='utf-8') as fichier:
+                json.dump(donneesExistantes, fichier, indent=4)
+
+            print(f"{Fore.GREEN}Transaction enregistrée dans le fichier de logs de {nomBanque}.")
+
+    except pymysql.MySQLError as e:
+        print(f"{Fore.RED}Erreur lors de la récupération des informations de la banque: {e}")
+
+
 def convertCardtoID(numeroCarte):
     cursor = db_connection.cursor()
     cursor.execute("SELECT idCompteEmetteur FROM cartebancaire WHERE numeroCarte = %s", (numeroCarte,))
     idCompteEmetteur = cursor.fetchone()
-    print("titktitkti")
-    print(idCompteEmetteur)
     return idCompteEmetteur
 
 def initTransac(idAq, montant):

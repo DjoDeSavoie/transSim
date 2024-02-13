@@ -45,3 +45,6 @@ Implémentation du serveur ntp (network time protocol) : fichier -> fonction qui
 
 
     CHIFFREMENT SI TEMPS SUPLEMENTAIRE
+
+
+    
