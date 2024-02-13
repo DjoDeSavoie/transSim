@@ -6,7 +6,7 @@ from TPE import *
 from Server_Autorisation import *
 from Server_Acquisition import *
 from creationData.creationBanque import creationBanque
-from utilz import verifier_solde
+from utilz import verifierSolde
 from creationData.creationComptesAcquereur import creerCompteAcquereur
 from creationData.creationComptesEmetteur import creerCompteEmetteur
 from colorama import init, Fore
@@ -53,7 +53,7 @@ def menu_principal():
         elif choix == '3':
             creerCompteEmetteur()
         elif choix == '4':
-            verifier_solde()
+            verifierSolde()
         elif choix == '5':
             acheter_produit()
         elif choix == '0':
