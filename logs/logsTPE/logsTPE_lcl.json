@@ -11,6 +11,6 @@
         "numero_compte_acquereur": 70177610538,
         "montant_transaction": 10.0,
         "date_heure_transaction": "13/02/2024 11:10:19",
-        "isTraite": false
+        "isTraite": true
     }
 ]

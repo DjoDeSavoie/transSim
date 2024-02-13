@@ -17,7 +17,7 @@ def ecrireFichierJson(chemin_fichier, contenu):
     with open(chemin_fichier, 'w') as f:
         json.dump(contenu, f, indent=4)
 
-def traiterDemande(demande):
+def traiterDemande(demande, chemin_fichier):
     if not demande["isTraite"]:
         # Convertir les valeurs en listes en une seule valeur si nécessaire
         idTPE = demande["idTPE"]
@@ -26,15 +26,17 @@ def traiterDemande(demande):
         if idTPE == idBanqueEmetteur:
             print(f"{Fore.CYAN}Traitement de la demande : {demande['idLog']}")
             demande["isTraite"] = True
-            # Traitement de la transaction si idTPE et idBanqueEmetteur sont les mêmes
-            traiterTransaction(demande['idLog'])
+            # Traitement de la transaction si idTPE et idBanqueEmetteur sont les mêmes, le deuxieme parametre est le chemin du fichier
+            traiterTransaction(demande['idLog'], chemin_fichier) 
         else:
-            print(f"{Fore.YELLOW}La demande {demande['idLog']} ne correspond pas à la banque émetteur.")
+            # appeler reseau interbancaire
+            #print(f"{Fore.YELLOW}La demande {demande['idLog']} ne correspond pas à la banque émetteur.")
+            print()
 
 def checkDemandesNonTraitees(chemin_fichier):
     demandes = lireFichierJson(chemin_fichier)
     for demande in demandes:
-        traiterDemande(demande)
+        traiterDemande(demande, chemin_fichier)
     ecrireFichierJson(chemin_fichier, demandes)
 
 def parcourirFichiersLogs(dossier):

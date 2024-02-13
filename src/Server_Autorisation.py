@@ -12,11 +12,11 @@ from colorama import init, Fore
 init(autoreset=True)
 
 # fonction qui génère une autorisation
-def traiterTransaction(idLog):
+def traiterTransaction(idLog, fichier): 
     db_connection = pymysql.connect(user='root', host='34.163.159.223', database='transsim')
     # Étape 1: Récupérer les informations du log
     try:
-        with open("logs/logsTPE/logsTPE.json", 'r') as file:
+        with open(fichier, 'r') as file:
             logs = json.load(file)
             transaction_log = next((item for item in logs if item["idLog"] == idLog), None)
             if not transaction_log:

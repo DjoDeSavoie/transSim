@@ -15,7 +15,7 @@ import threading
 init(autoreset=True)
 
 # Fonction wrapper pour Server_Acquisition.py
-dossier_logs = "logs/logsTPE/"
+
 def run_server_acquisition(dossier_logs):
     print(f"{Fore.YELLOW}Serveur d'acquisition en cours d'exécution...")
 
@@ -26,8 +26,8 @@ def run_server_acquisition(dossier_logs):
 
     
 # Fonction pour démarrer le server acquisition dans un autre thread
-def start_server_acquisition():
-    acquisition_thread = threading.Thread(target=run_server_acquisition)
+def start_server_acquisition(dossier_logs):
+    acquisition_thread = threading.Thread(target=run_server_acquisition, args=(dossier_logs,))
     acquisition_thread.daemon = True  # Le thread sera tué lorsque le programme principal se termine
     acquisition_thread.start()
 
@@ -71,8 +71,9 @@ def menu_principal():
             print(f"{Fore.RED}Choix invalide! Veuillez réessayer.")
 
 if __name__ == "__main__":
+    dossier_logs = "logs/logsTPE/"
     # Lancer le server acquisition dans un thread séparé
-    start_server_acquisition()
+    start_server_acquisition(dossier_logs)
     
     # Lancer le menu principal
     menu_principal()
