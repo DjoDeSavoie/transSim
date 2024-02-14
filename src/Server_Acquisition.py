@@ -27,7 +27,8 @@ def traiterDemande(demande, chemin_fichier):
             
         #sinon -> on appelle le serveur interbancaire
         else: 
-            routageTransaction(demande)
+            #routageTransaction(demande)
+            return
             # Si idTPE et idBanqueEmetteur sont différents
             #on appel la fonction du serv inter bancaire avec en paramètre les données de la transac
             
