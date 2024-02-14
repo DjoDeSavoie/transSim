@@ -2,7 +2,7 @@ import json
 import time
 import os
 from Server_Autorisation import traiterTransaction
-# from Server_Interbancaire import routageTransaction
+from Server_Interbancaire import routageTransaction
 from colorama import init, Fore
 
 from utilz import lireFichierJson, ecrireFichierJson
@@ -11,8 +11,6 @@ from utilz import lireFichierJson, ecrireFichierJson
 init(autoreset=True)
 
 dossier_logs = "logs/logsTPE/"
-
-
 
 def traiterDemande(demande, chemin_fichier):
     if not demande["isTraite"]:

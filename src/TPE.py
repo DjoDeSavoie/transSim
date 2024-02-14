@@ -13,9 +13,6 @@ import pymysql
 import random
 
 
-
-
-
 # Initialiser colorama
 init(autoreset=True)
 

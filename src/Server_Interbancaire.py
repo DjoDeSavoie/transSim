@@ -15,7 +15,7 @@ def routageTransaction(demande):
     nomBanqueEmetteur = recupererNomBanque(idBanqueEmetteur)
     
     #on inscrit la demande dans le fichier de logs de la banque emetteur
-    ecrireFichierJson("logsTPE/fichierLogs" + nomBanqueEmetteur + ".json", demande)
+    ecrireFichierJson("logs/logsTPE/logsTPE_" + nomBanqueEmetteur + ".json", demande)
     
     
 
