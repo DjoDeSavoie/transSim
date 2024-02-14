@@ -63,10 +63,12 @@ def getSolde(db_connection, id_compte, type_compte):
 
 ######### Fonctions pour lire et écrire des fichiers JSON #########
 
+# Fonction pour lire un fichier JSON
 def lireFichierJson(chemin_fichier):
     with open(chemin_fichier, 'r') as f:
         return json.load(f)
 
+# Fonction pour écrire dans un fichier JSON en conservant les valeurs existantes
 def ecrireFichierJson(chemin_fichier, contenu):
     with open(chemin_fichier, 'w') as f:
         json.dump(contenu, f, indent=4)
