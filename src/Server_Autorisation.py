@@ -60,3 +60,5 @@ def traiterTransaction(idLog, fichier):
         db_connection.rollback()
         print(f"Erreur lors de la transaction dans la base de données: {e}")
         return False
+
+def 

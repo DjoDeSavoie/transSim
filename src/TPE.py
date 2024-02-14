@@ -205,12 +205,12 @@ def EnvoiAutorisation(idCompteEmetteur, idCompteAcquereur, montant):
 
             cursor = db_connection.cursor()
             cursor.execute("SELECT idBanqueEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s", (idCompteEmetteur))
-            idBanqueEmetteur = cursor.fetchone()
+            idBanqueEmetteur = cursor.fetchone()[0]
 
             # Créer la nouvelle ligne pour le log
             nouvelleLigne = {
                 "idLog": next_id,
-                "idTPE": idBanqueAcquereur,  # Utiliser l'ID de la banque acquéreur
+                "idBanqueAcquereur": idBanqueAcquereur,  # Utiliser l'ID de la banque acquéreur
                 "idBanqueEmetteur": idBanqueEmetteur,
                 "numero_compte_emetteur": idCompteEmetteur,
                 "numero_compte_acquereur": idCompteAcquereur,
@@ -235,7 +235,7 @@ def EnvoiAutorisation(idCompteEmetteur, idCompteAcquereur, montant):
 def convertCardtoID(numeroCarte):
     cursor = db_connection.cursor()
     cursor.execute("SELECT idCompteEmetteur FROM cartebancaire WHERE numeroCarte = %s", (numeroCarte,))
-    idCompteEmetteur = cursor.fetchone()
+    idCompteEmetteur = cursor.fetchone()[0]
     return idCompteEmetteur
 
 def initTransac(idAq, montant):

@@ -15,7 +15,7 @@ dossier_logs = "logs/logsTPE/"
 def traiterDemande(demande, chemin_fichier):
     if not demande["isTraite"]:
         # Convertir les valeurs en listes en une seule valeur si nécessaire
-        idTPE = demande["idTPE"]
+        idTPE = demande["idBanqueAcquereur"]
         idBanqueEmetteur = demande["idBanqueEmetteur"][0] if isinstance(demande["idBanqueEmetteur"], list) else demande["idBanqueEmetteur"]
         
         #si les deux banques participant à la transaction sont les mêmes
