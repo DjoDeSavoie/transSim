@@ -2,7 +2,7 @@ import json
 import time
 import os
 from Server_Autorisation import traiterTransaction
-from Server_Interbancaire import routageTransaction
+# from Server_Interbancaire import routageTransaction
 from colorama import init, Fore
 
 # Initialiser colorama
@@ -33,7 +33,7 @@ def traiterDemande(demande, chemin_fichier):
             
         #sinon -> on appelle le serveur interbancaire
         else: 
-            routageTransaction(demande)
+            #routageTransaction(demande)
             
             return
             # Si idTPE et idBanqueEmetteur sont différents

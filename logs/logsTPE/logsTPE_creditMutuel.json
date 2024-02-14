@@ -26,5 +26,19 @@
         "montant_transaction": 15.0,
         "date_heure_transaction": "13/02/2024 10:59:07",
         "isTraite": false
+    },
+    {
+        "idLog": 3,
+        "idTPE": 1,
+        "idBanqueEmetteur": [
+            1
+        ],
+        "numero_compte_emetteur": [
+            "7b11558706155145d1f6ef720776ba1bcfa2a7bf5c9a7e0b5c3e750b7d45d3e7"
+        ],
+        "numero_compte_acquereur": "4005750c2a25ee3c086fde1d32b49a6a99ebd5024471f86e63386c6d1a1057bb",
+        "montant_transaction": 20.0,
+        "date_heure_transaction": "14/02/2024 20:42:00",
+        "isTraite": true
     }
 ]

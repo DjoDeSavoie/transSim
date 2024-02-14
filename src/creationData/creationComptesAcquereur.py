@@ -3,6 +3,7 @@
 import pymysql
 import random
 from datetime import datetime
+from utilz import hash_sha256
 
 
 #importe le serveur NTP pour la fonction de récupération de la date actuelle + 2 ans 
@@ -99,7 +100,7 @@ def creerCompteAcquereur():
     
     
     # Exécutez la requête SQL pour créer un compte
-    cursor.execute("INSERT INTO comptebancaireacquereur (idCompteAcquereur, idBanqueAcquereur, nom, prenom, soldeCompteAcquereur) VALUES (%s, %s, %s, %s, %s)", (idCompteAcquereur, idBanque, nom, prenom, solde))
+    cursor.execute("INSERT INTO comptebancaireacquereur (idCompteAcquereur, idBanqueAcquereur, nom, prenom, soldeCompteAcquereur) VALUES (%s, %s, %s, %s, %s)", (hash_sha256(idCompteAcquereur), idBanque, nom, prenom, solde))
     conn.commit()
     print("Compte créé avec succès! ... \n Création du TPE associée au compte ... \n")
     

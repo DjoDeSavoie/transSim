@@ -169,27 +169,6 @@ def acheter_produit():
     initTransac(idCompteAcquereur, produit_selectionne['montant'])
 
 
-def getSolde(id_compte, type_compte):
-    try:
-        with db_connection.cursor() as cursor:
-            if type_compte == '1':
-                cursor.execute("SELECT soldeCompteEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s", (hash_sha256(id_compte)))
-            elif type_compte == '2':
-                cursor.execute("SELECT soldeCompteAcquereur FROM comptebancaireacquereur WHERE idCompteAcquereur = %s", (hash_sha256(id_compte)))
-            else:
-                print(f"{Fore.RED}Type de compte non valide.")
-                return None
-
-            solde = cursor.fetchone()
-            if solde:
-                return solde[0]
-            else:
-                print(f"{Fore.RED}Aucun compte trouvé avec cet ID.")
-                return None
-    except pymysql.MySQLError as e:
-        print(f"{Fore.RED}Erreur lors de la connexion à la base de données: {e}")
-        return None
-
 ############################################################ PARTIE ENVOI TRANS ################################################################
 
 # Fonction pour obtenir le prochain ID
