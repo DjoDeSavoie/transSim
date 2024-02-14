@@ -1,29 +1,34 @@
 # Server_Autorisation.py
-
 import json
 import time
 import pymysql
-from pymysql import MySQLError
 
+from pymysql import MySQLError
 from Server_NTP import getDateWithTwoYears
 from colorama import init, Fore
+from utilz import lireFichierJson
 
 # Initialiser colorama
 init(autoreset=True)
 
-# fonction qui génère une autorisation
-def traiterTransaction(idLog, fichier): 
-    db_connection = pymysql.connect(user='root', host='34.163.159.223', database='transsim')
-    # Étape 1: Récupérer les informations du log
+db_connection = pymysql.connect(user='root', host='34.163.159.223', database='transsim')
+
+def recupereDonneesLog(idLog, fichier):
     try:
         with open(fichier, 'r') as file:
             logs = json.load(file)
             transaction_log = next((item for item in logs if item["idLog"] == idLog), None)
             if not transaction_log:
                 raise ValueError(f"Aucun log trouvé avec l'idLog {idLog}.")
+            return transaction_log
     except (IOError, json.JSONDecodeError, ValueError) as e:
         print(f"Erreur lors de la lecture du fichier de logs: {e}")
         return False
+
+# fonction qui génère une autorisation
+def traiterTransaction(idLog, fichier): 
+    # Étape 1: Récupérer les données de la transaction
+    transaction_log = recupereDonneesLog(idLog, fichier)
     
     # Étape 2 et 3: Vérification des soldes et transfert des montants
     try:
@@ -54,6 +59,7 @@ def traiterTransaction(idLog, fichier):
             # Valider la transaction
             db_connection.commit()
             print("La transaction a été traitée avec succès.")
+            genereAutorisation(idLog, fichier)
             return True
     except MySQLError as e:
         # En cas d'erreur, annuler la transaction
@@ -61,4 +67,26 @@ def traiterTransaction(idLog, fichier):
         print(f"Erreur lors de la transaction dans la base de données: {e}")
         return False
 
-def 
+# Genere une autorisation
+def genereAutorisation(idLog, fichier):
+    transaction_log = recupereDonneesLog(idLog, fichier)
+    
+    # Récupérer les données de la transaction
+    idBanqueEmetteur = transaction_log["numero_compte_emetteur"]
+    dateAutorisation = transaction_log["date_heure_transaction"]
+    montant = transaction_log["montant_transaction"]
+
+    try:
+        with db_connection.cursor() as cursor:
+            # Création de la requête SQL d'insertion
+            sql = """
+            INSERT INTO autorisationtransaction (idBanqueEmetteur, dateAutorisation, montantAutorisation)
+            VALUES (%s, %s, %s)
+            """
+            # Exécution de la requête SQL
+            cursor.execute(sql, (idBanqueEmetteur, dateAutorisation, montant))
+            # Validation des modifications
+            db_connection.commit()
+            print(f"Autorisation pour la transaction {idLog} insérée avec succès.")
+    except pymysql.MySQLError as e:
+        print(f"Erreur lors de l'insertion dans la base de données: {e}")
