@@ -18,6 +18,8 @@ def traiterDemande(demande, chemin_fichier):
         idTPE = demande["idBanqueAcquereur"]
         idBanqueEmetteur = demande["idBanqueEmetteur"][0] if isinstance(demande["idBanqueEmetteur"], list) else demande["idBanqueEmetteur"]
         
+        
+        
         #si les deux banques participant à la transaction sont les mêmes
         if idTPE == idBanqueEmetteur:
             print(f"{Fore.CYAN}Traitement de la demande : {demande['idLog']}")
@@ -27,8 +29,8 @@ def traiterDemande(demande, chemin_fichier):
             
         #sinon -> on appelle le serveur interbancaire
         else: 
-            #routageTransaction(demande)
-            return
+            routageTransaction(demande)
+
             # Si idTPE et idBanqueEmetteur sont différents
             #on appel la fonction du serv inter bancaire avec en paramètre les données de la transac
             
