@@ -1,2 +1,0 @@
-#Fichier contenant les fonctions du serveur réseau interbancaire
-

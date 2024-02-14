@@ -1,5 +1,6 @@
 ############################################    Utilz    ############################################
-
+import json
+import pymysql
 
 from colorama import init, Fore
 import hashlib
@@ -32,24 +33,20 @@ def verifierSolde():
     if solde is not None:
         print(f"{Fore.CYAN}Le solde de votre compte est de {solde}€.")
 
+######### Connexion à la base de données #########
 
-def getSolde(db_connection, id_compte, type_compte):
-    try:
-        with db_connection.cursor() as cursor:
-            if type_compte == '1':
-                cursor.execute("SELECT soldeCompteEmetteur FROM comptebancaireemetteur WHERE idCompteEmetteur = %s", (hash_sha256(id_compte)))
-            elif type_compte == '2':
-                cursor.execute("SELECT soldeCompteAcquereur FROM comptebancaireacquereur WHERE idCompteAcquereur = %s", (hash_sha256(id_compte)))
-            else:
-                print(f"{Fore.RED}Type de compte non valide.")
-                return None
+conn = pymysql.connect(user ='root', host='34.163.159.223', database='transsim')
+cursor = conn.cursor()
 
-            solde = cursor.fetchone()
-            if solde:
-                return solde[0]
-            else:
-                print(f"{Fore.RED}Aucun compte trouvé avec cet ID.")
-                return None
-    except pymysql.MySQLError as e:
-        print(f"{Fore.RED}Erreur lors de la connexion à la base de données: {e}")
-        return None
+
+
+
+######### Fonctions pour lire et écrire des fichiers JSON #########
+
+def lireFichierJson(chemin_fichier):
+    with open(chemin_fichier, 'r') as f:
+        return json.load(f)
+
+def ecrireFichierJson(chemin_fichier, contenu):
+    with open(chemin_fichier, 'w') as f:
+        json.dump(contenu, f, indent=4)
