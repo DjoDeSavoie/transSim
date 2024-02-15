@@ -3,6 +3,7 @@ import json
 import time
 import pymysql
 
+from datetime import datetime
 from pymysql import MySQLError
 from Server_NTP import getDateWithTwoYears
 from colorama import init, Fore
@@ -72,8 +73,11 @@ def genereAutorisation(idLog, fichier):
     transaction_log = recupereDonneesLog(idLog, fichier)
     
     # Récupérer les données de la transaction
-    idBanqueEmetteur = transaction_log["numero_compte_emetteur"]
-    dateAutorisation = transaction_log["date_heure_transaction"]
+    idBanqueEmetteur = transaction_log["idBanqueEmetteur"]
+    date_heure_str = transaction_log["date_heure_transaction"]
+    date_heure_obj = datetime.strptime(date_heure_str, "%d/%m/%Y %H:%M:%S")
+    dateAutorisation = date_heure_obj.strftime("%Y-%m-%d")
+
     montant = transaction_log["montant_transaction"]
 
     try:

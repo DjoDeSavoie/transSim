@@ -5,6 +5,7 @@ import pymysql
 from colorama import init, Fore
 import hashlib
 import pymysql
+import os
 
 
 # Initialiser colorama
@@ -72,3 +73,44 @@ def lireFichierJson(chemin_fichier):
 def ecrireFichierJson(chemin_fichier, contenu):
     with open(chemin_fichier, 'w') as f:
         json.dump(contenu, f, indent=4)
+
+def creeFichierLogs(nomFichierLogs):
+    # Vérifier si le fichier de logs existe déjà pour cette banque
+    if not os.path.exists(nomFichierLogs):
+        # S'il n'existe pas, initialisez une liste vide
+        donneesExistantes = []
+        return donneesExistantes
+    else:
+        # S'il existe, chargez son contenu
+        with open(nomFichierLogs, 'r', encoding='utf-8') as fichier:
+            donneesExistantes = json.load(fichier)
+            return donneesExistantes
+        
+def recupererNomBanque(idBanque):
+    
+    # Connexion à la base de données 
+    conn = pymysql.connect(user ='root', host='34.163.159.223', database='transsim')
+    cursor = conn.cursor()
+    
+    # Exécutez la requête SQL pour récupérer le nom de la banque
+    cursor.execute("SELECT nomBanque FROM banque WHERE idBanque = %s", (idBanque))
+    nomBanque = cursor.fetchone()[0]
+    
+    # Fermer la connexion à la base de données
+    conn.close()
+    
+    return nomBanque
+
+def recupererIdBanque(nomBanque):
+    
+    # Connexion à la base de données 
+    conn = pymysql.connect(user ='root', host='34.163.159.223', database='transsim')
+    cursor = conn.cursor()
+
+    # Exécutez la requête SQL pour récupérer l'id de la banque
+    cursor.execute("SELECT idBanque FROM banque WHERE nomBanque = %s", (nomBanque))
+    idBanque = cursor.fetchone()[0]
+
+    # Fermer la connexion à la base de données
+    conn.close()
+    return idBanque

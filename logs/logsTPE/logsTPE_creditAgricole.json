@@ -3,30 +3,33 @@
         "idLog": 1,
         "idBanqueAcquereur": 7,
         "idBanqueEmetteur": 1,
-        "numero_compte_emetteur": "7b11558706155145d1f6ef720776ba1bcfa2a7bf5c9a7e0b5c3e750b7d45d3e7",
+        "numero_compte_emetteur": "313ff7f3105c1ffd7857c4328b1b6ecb41fe942c33e50469ead00c4aaffdcb3c",
         "numero_compte_acquereur": "c35204a9110ef50dcd81eb05c3f05921f3c0e6b966ae5970cd4c69f70d93b118",
-        "montant_transaction": 45.0,
-        "date_heure_transaction": "14/02/2024 22:09:07",
-        "isTraite": true
+        "montant_transaction": 20.0,
+        "date_heure_transaction": "15/02/2024 01:05:04",
+        "isTraite": true,
+        "hasToBeRouted": true
     },
     {
         "idLog": 2,
         "idBanqueAcquereur": 7,
         "idBanqueEmetteur": 1,
-        "numero_compte_emetteur": "7b11558706155145d1f6ef720776ba1bcfa2a7bf5c9a7e0b5c3e750b7d45d3e7",
+        "numero_compte_emetteur": "313ff7f3105c1ffd7857c4328b1b6ecb41fe942c33e50469ead00c4aaffdcb3c",
         "numero_compte_acquereur": "c35204a9110ef50dcd81eb05c3f05921f3c0e6b966ae5970cd4c69f70d93b118",
-        "montant_transaction": 45.0,
-        "date_heure_transaction": "14/02/2024 22:17:57",
-        "isTraite": true
+        "montant_transaction": 20.0,
+        "date_heure_transaction": "15/02/2024 01:15:11",
+        "isTraite": true,
+        "hasToBeRouted": true
     },
     {
         "idLog": 3,
         "idBanqueAcquereur": 7,
         "idBanqueEmetteur": 1,
-        "numero_compte_emetteur": "7b11558706155145d1f6ef720776ba1bcfa2a7bf5c9a7e0b5c3e750b7d45d3e7",
+        "numero_compte_emetteur": "313ff7f3105c1ffd7857c4328b1b6ecb41fe942c33e50469ead00c4aaffdcb3c",
         "numero_compte_acquereur": "c35204a9110ef50dcd81eb05c3f05921f3c0e6b966ae5970cd4c69f70d93b118",
-        "montant_transaction": 45.0,
-        "date_heure_transaction": "14/02/2024 22:21:48",
-        "isTraite": true
+        "montant_transaction": 20.0,
+        "date_heure_transaction": "15/02/2024 01:18:09",
+        "isTraite": true,
+        "hasToBeRouted": true
     }
 ]

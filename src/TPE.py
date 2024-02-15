@@ -4,7 +4,7 @@ from getpass4 import getpass
 from Server_NTP import getTime
 from datetime import datetime
 from colorama import init, Fore
-from utilz import hash_sha256
+from utilz import hash_sha256, creeFichierLogs
 
 import json
 import os
@@ -165,7 +165,33 @@ def acheter_produit():
     # Appeler initTransac avec l'idCompteAcquereur et le montant du produit
     initTransac(idCompteAcquereur, produit_selectionne['montant'])
 
+    printTicket()
 
+def printTicket():
+    try:
+        with db_connection.cursor() as cursor:
+            # Sélectionnez la dernière entrée ajoutée à la table autorisationtransaction
+            cursor.execute("""
+                SELECT numeroAutorisation, idBanqueEmetteur, dateAutorisation, montantAutorisation
+                FROM autorisationtransaction
+                ORDER BY numeroAutorisation DESC
+                LIMIT 1
+            """)
+            dernier_log = cursor.fetchone()
+
+            if dernier_log:
+                # Afficher le ticket de caisse
+                print("Ticket de caisse:".center(40, "-"))
+                print(f"Numéro d'autorisation : {dernier_log[0]}")
+                print(f"ID de la banque émettrice : {dernier_log[1]}")
+                print(f"Date d'autorisation : {dernier_log[2].strftime('%d/%m/%Y')}")
+                print(f"Montant de l'autorisation : {dernier_log[3]} EUR")
+                print("".center(40, "-"))
+            else:
+                print("Aucun log trouvé dans la base de données.")
+    except pymysql.MySQLError as e:
+        print(f"Erreur lors de la récupération du dernier log: {e}")
+    
 ############################################################ PARTIE ENVOI TRANS ################################################################
 
 # Fonction pour obtenir le prochain ID
@@ -176,6 +202,7 @@ def get_next_id(donneesExistantes):
         return max(demande["idLog"] for demande in donneesExistantes) + 1
     else:
         return 1
+
 
 def EnvoiAutorisation(idCompteEmetteur, idCompteAcquereur, montant):
     try:
@@ -191,14 +218,8 @@ def EnvoiAutorisation(idCompteEmetteur, idCompteAcquereur, montant):
             # Définir le chemin du fichier de logs basé sur le nom de la banque
             nomFichierLogs = f"logs/logsTPE/logsTPE_{nomBanque}.json"
 
-            # Vérifier si le fichier de logs existe déjà pour cette banque
-            if not os.path.exists(nomFichierLogs):
-                # S'il n'existe pas, initialisez une liste vide
-                donneesExistantes = []
-            else:
-                # S'il existe, chargez son contenu
-                with open(nomFichierLogs, 'r', encoding='utf-8') as fichier:
-                    donneesExistantes = json.load(fichier)
+            # Créer le fichier de logs s'il n'existe pas et obtenir les données existantes
+            donneesExistantes = creeFichierLogs(nomFichierLogs)
 
             # Obtenez le prochain ID de log
             next_id = get_next_id(donneesExistantes)
@@ -216,7 +237,8 @@ def EnvoiAutorisation(idCompteEmetteur, idCompteAcquereur, montant):
                 "numero_compte_acquereur": idCompteAcquereur,
                 "montant_transaction": montant,
                 "date_heure_transaction": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-                "isTraite": False
+                "isTraite": False,
+                "hasToBeRouted": False if idBanqueAcquereur == idBanqueEmetteur else True
             }
 
             # Ajouter la nouvelle ligne aux données existantes
