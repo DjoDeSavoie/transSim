@@ -1,74 +1,69 @@
-# transSim
-Projet de simulateur de transaction par carte bancaire développé en python
+**transSim**
+Card transaction simulator project developed in Python
 
+**Introduction**
+This transaction management system processes financial transactions between issuer and acquirer accounts. It includes several interconnected components that handle various stages of a transaction, including balance verification, authorization generation, and interbank routing.
 
-# Introduction
-Ce système de gestion des transactions permet de traiter des transactions financières entre des comptes émetteurs et acquéreurs. Il comprend plusieurs composants interconnectés qui gèrent les différentes étapes d'une transaction, y compris la vérification des soldes, la génération des autorisations et le routage interbancaire.    
-
-# Configuration
-Assurez-vous que votre environnement est configuré avec Python 3.x et que vous avez installé les dépendances nécessaires comme pymysql et colorama en utilisant pip:
+**Configuration**
+Ensure your environment is set up with Python 3.x and that you have installed the required dependencies such as pymysql and colorama using pip:
 
 pip3 install pymysql
 pip install getpass4
 pip install termcolor
 pip install ntplib
 
+**Components**
 
-# Composants
-Server Acquisition : Ce composant exécute une boucle qui surveille continuellement les fichiers de logs dans le répertoire logs/logsTPE/. Il recherche des transactions marquées comme non traitées ("isTraite": false). Lorsqu'une transaction non traitée est détectée, le Server Acquisition appelle le Server Autorisation pour commencer le processus de vérification et d'autorisation.
+_Server Acquisition_ : This component runs a loop that continuously monitors log files in the logs/logsTPE/ directory. It looks for transactions marked as unprocessed (“isTraite”: false). When an unprocessed transaction is detected, the Server Acquisition calls the Server Authorization to begin the verification and authorization process.
 
-Server Autorisation : Ce composant est chargé de la vérification des fonds disponibles dans le compte émetteur. Il confirme que le solde est suffisant pour couvrir la transaction demandée. Si les fonds sont suffisants, le serveur procède à l'autorisation de la transaction et enregistre les détails dans la table autorisationtransaction de la base de données.
+_Server Authorization_ : This component is responsible for checking the available funds in the issuer account. It confirms that the balance is sufficient to cover the requested transaction. If the funds are adequate, the server authorizes the transaction and records the details in the autorisationtransaction table in the database.
 
-Routage Interbancaire : Lorsqu'une transaction implique deux banques différentes, le système active un processus de routage interbancaire. Ce service s'assure que les transactions soient correctement acheminées entre les banques émettrices et acquéreurs, en respectant les protocoles interbancaires et les formats d'échange de données.
+_Interbank Routing_ : When a transaction involves two different banks, the system activates an interbank routing process. This service ensures that transactions are correctly routed between issuing and acquiring banks, adhering to interbank protocols and data exchange formats.
 
-TPE (Terminal de Paiement Électronique) : Ce terminal virtuel est utilisé pour initier les transactions. Il simule l'interaction d'un terminal physique en envoyant des demandes de transaction au Server Acquisition et en recevant des autorisations du Server Autorisation.
+_Electronic Payment Terminal (TPE)_ : This virtual terminal initiates transactions. It simulates the interaction of a physical terminal by sending transaction requests to the Server Acquisition and receiving authorizations from the Server Authorization.
 
-Serveur NTP (Network Time Protocol) : Ce serveur est utilisé pour obtenir des horodatages précis et synchronisés pour chaque transaction. Les horodatages sont essentiels pour la traçabilité et l'audit des transactions.
+_NTP Server (Network Time Protocol)_ : This server is used to obtain precise and synchronized timestamps for each transaction. Timestamps are essential for traceability and auditing.
 
-Utilz : Ce composant est un ensemble d'outils ou de bibliothèques utilitaires utilisés à travers le système pour des tâches communes telles que la manipulation de dates, la génération de logs, etc.
+_Utilz_ : This component is a set of tools or utility libraries used across the system for common tasks such as date manipulation, log generation, etc.
 
-creationBanque : Ce script ou fonction est responsable de l'ajout de nouvelles banques dans la base de données. Il ajoute des enregistrements à la table banque avec les informations nécessaires pour chaque banque nouvellement créée.
+_creationBanque_ : This script or function is responsible for adding new banks to the database. It adds records to the banque table with the necessary information for each newly created bank.
 
-creationCarte : Ce composant gère la création de nouvelles cartes bancaires. Il génère les numéros de cartes, les pins, et les dates d'expiration, puis les sauvegarde dans la base de données.
+_creationCarte_ : This component manages the creation of new bank cards. It generates card numbers, PINs, and expiration dates, then saves them to the database.
 
-creationCompteAcquereur : Ce script crée de nouveaux comptes acquéreurs qui sont utilisés pour recevoir des fonds lors des transactions. Ces comptes sont ajoutés à la table comptebancaireacquereur avec les détails appropriés.
+_creationCompteAcquereur_ : This script creates new acquirer accounts used to receive funds during transactions. These accounts are added to the comptebancaireacquereur table with the appropriate details.
 
-creationCompteEmetteur : De même, ce script crée de nouveaux comptes émetteurs utilisés pour envoyer de l'argent dans les transactions. Les informations de ces comptes sont stockées dans la table comptebancaireemetteur.
+_creationCompteEmetteur_ : Similarly, this script creates new issuer accounts used to send money in transactions. The information for these accounts is stored in the comptebancaireemetteur table.
 
-# Fonctionnalités
-Traitement de Transactions : Les transactions sont lues à partir d'un fichier de logs JSON. Chaque transaction contient des informations telles que les numéros de compte émetteur et acquéreur, le montant et la date de la transaction.
+**Features**
+_Transaction Processing_ : Transactions are read from a JSON log file. Each transaction contains information such as issuer and acquirer account numbers, the amount, and the transaction date.
 
-Vérification des Soldes : Avant de procéder à une transaction, le système vérifie que le compte émetteur dispose d'un solde suffisant.
+_Balance Verification_ : Before proceeding with a transaction, the system checks that the issuer account has sufficient funds.
 
-Génération d'Autorisation : Pour chaque transaction réussie, une autorisation est générée et stockée dans la table autorisationtransaction de la base de données.
+_Authorization Generation_ : For each successful transaction, an authorization is generated and stored in the autorisationtransaction table in the database.
 
-Routage des Transactions : Les transactions entre différentes banques sont gérées par le système de routage interbancaire.
+_Transaction Routing_ : Transactions between different banks are managed by the interbank routing system.
 
-Affichage des Tickets : Après chaque transaction, un ticket de caisse est généré affichant les détails de l'autorisation.
+_Receipt Display_ : After each transaction, a receipt is generated showing the authorization details.
 
-# Utilisation
-Pour démarrer le système, exécutez le fichier main.py qui lancera le menu principal et permettra aux utilisateurs de choisir différentes actions telles que vérifier le solde, effectuer une transaction ou arrêter le programme.
+**Usage**
+To start the system, execute the main.py file, which will launch the main menu and allow users to select different actions such as checking balances, performing transactions, or stopping the program.
 
 python main.py
 
-Le système gère automatiquement les transactions en arrière-plan via un processus multithread qui surveille les fichiers de logs JSON.
+The system automatically handles transactions in the background via a multithreaded process that monitors the JSON log files.
 
-# Structure de Base de Données
-La base de données contient plusieurs tables pour stocker les informations relatives aux transactions, aux comptes émetteurs et acquéreurs, et aux autorisations de transaction. Voici un aperçu de la structure des tables principales :
+**Database Structure**
+The database contains several tables to store information related to transactions, issuer and acquirer accounts, and transaction authorizations. Here is an overview of the main table structure:
 
-comptebancaireemetteur : Stocke les détails des comptes émetteurs.
-comptebancaireacquereur : Stocke les détails des comptes acquéreurs.
-autorisationtransaction : Enregistre les autorisations de transactions réussies.
-banque : Liste de toutes les banques
-tpe : liste des tpe
-carte bancaire : liste des cartes bancaires
+_comptebancaireemetteur_ : Stores details of issuer accounts.
+_comptebancaireacquereur_ : Stores details of acquirer accounts.
+_autorisationtransaction_ : Logs authorizations for successful transactions.
+_banque_ : Lists all banks.
+_tpe_ : Lists all electronic payment terminals.
+_carte bancaire_ : Lists all bank cards.
 
-# Logs
-Les fichiers de logs sont stockés dans le dossier logs/logsTPE/ et sont au format JSON. Ils contiennent les détails des transactions à traiter et sont constamment surveillés par le système pour le traitement.
+**Logs**
+Log files are stored in the logs/logsTPE/ folder in JSON format. They contain transaction details to be processed and are continuously monitored by the system for processing.
 
-# Sécurité
-Le hachage avec sha256 a été mis en place pour garantir une sécurité optimale tout au long de la transaction.
-
-
-
-
+**Security**
+SHA256 hashing has been implemented to ensure optimal security throughout the transaction process.
